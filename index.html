@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PRF Juca Study Tracker</title>
+
+    <!-- Fonte -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/cards.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                📘
+            </div>
+
+            <div class="logo-text">
+                <h2>PRF JUCA</h2>
+                <span>Study Tracker</span>
+            </div>
+
+        </div>
+
+        <nav>
+
+            <ul>
+
+                <li class="active">
+                    🏠
+                    <span>Dashboard</span>
+                </li>
+
+                <li>
+                    📅
+                    <span>Agenda</span>
+                </li>
+
+                <li>
+                    📖
+                    <span>Planejamento</span>
+                </li>
+
+                <li>
+                    📚
+                    <span>Edital</span>
+                </li>
+
+                <li>
+                    📝
+                    <span>Questões</span>
+                </li>
+
+                <li>
+                    🎯
+                    <span>Simulados</span>
+                </li>
+
+                <li>
+                    📈
+                    <span>Estatísticas</span>
+                </li>
+
+                <li>
+                    ⚙️
+                    <span>Configurações</span>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </aside>
+
+    <main class="content">
+
+        <header class="header">
+
+            <div>
+
+                <h1>Boa noite, Carlos 👋</h1>
+
+                <p>
+                    Continue firme. Cada hora estudada aproxima você da aprovação.
+                </p>
+
+            </div>
+
+            <div class="profile">
+
+                <div class="notification">
+
+                    🔔
+
+                </div>
+
+                <div class="avatar">
+
+                    C
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="today-card">
+
+            <h2>📌 Prioridade de Hoje</h2>
+
+            <p>
+                Matemática • Funções + 30 Questões
+            </p>
+
+        </section>
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <span>Hoje</span>
+
+                <h2>0h 00m</h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <span>Semana</span>
+
+                <h2>0h 00m</h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <span>Mês</span>
+
+                <h2>0h 00m</h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <span>Questões</span>
+
+                <h2>0</h2>
+
+            </div>
+
+        </section>
+
+        <section class="dashboard-grid">
+
+            <div class="panel">
+
+                <h3>🎯 Meta diária</h3>
+
+                <div class="progress">
+
+                    <div class="progress-fill" style="width:40%"></div>
+
+                </div>
+
+                <strong>40%</strong>
+
+            </div>
+
+            <div class="panel">
+
+                <h3>📚 Progresso do Edital</h3>
+
+                <div class="progress">
+
+                    <div class="progress-fill blue" style="width:22%"></div>
+
+                </div>
+
+                <strong>22%</strong>
+
+            </div>
+
+            <div class="panel">
+
+                <h3>⏱ Cronômetro</h3>
+
+                <div class="timer">
+
+                    00:00:00
+
+                </div>
+
+                <button class="btn-primary">
+
+                    Iniciar
+
+                </button>
+
+            </div>
+
+            <div class="panel">
+
+                <h3>📈 Últimos 7 dias</h3>
+
+                <div class="chart-placeholder">
+
+                    Gráfico será adicionado na v0.2.2
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+
+</body>
+
+</html>

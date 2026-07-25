@@ -1,0 +1,1 @@
+console.log("PRF Juca Study Tracker iniciado.");
