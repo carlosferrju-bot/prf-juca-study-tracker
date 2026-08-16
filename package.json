@@ -1,0 +1,9 @@
+{
+  "name": "prf-juca-study-tracker",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@vercel/blob": "latest"
+  }
+}
