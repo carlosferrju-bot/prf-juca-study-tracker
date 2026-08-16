@@ -38,7 +38,7 @@ function openTimer(){const w=window.open(location.href+'#Cronômetro&separate=1'
 async function addDisc(){const n=prompt('Nome da disciplina:');if(!n)return;db.disciplines.push({id:crypto.randomUUID(),name:n.trim()});await saveCloud();render()}
 async function delDisc(i){if(!confirm('Excluir disciplina?'))return;db.disciplines.splice(i,1);await saveCloud();render()}
 async function delSession(i){if(!confirm('Excluir sessão?'))return;db.sessions.splice(i,1);await saveCloud();render()}
-function esc(x){return String(x??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function esc(x){return String(x??'').replace(/[&<>'\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c]))}
 window.addEventListener('hashchange',render);sync();render();setInterval(sync,30000);
 </script>
 </body></html>
