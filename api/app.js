@@ -20,7 +20,10 @@ export default async function handler(req, res) {
 #prfJucaUserBar{position:fixed;right:18px;top:14px;z-index:9999;display:flex;align-items:center;gap:8px;background:#071321ee;border:1px solid #29455f;border-radius:12px;padding:7px 9px;box-shadow:0 12px 35px #0008;backdrop-filter:blur(10px);font:12px Arial,Segoe UI,sans-serif;color:#dcecff}
 #prfJucaUserBar button{border:1px solid #466887;background:#173c62;color:#fff;border-radius:8px;padding:6px 9px;font-weight:800;cursor:pointer}
 #prfJucaUserBar button:hover{border-color:#00e5ff}
-@media(max-width:650px){#prfJucaUserBar{position:static;margin:8px;justify-content:center}}
+/* Reserva espaço no conteúdo para que a barra fixa nunca cubra cards ou controles. */
+#prfJucaUserBar ~ .app .main{padding-top:78px}
+@media(max-width:950px){#prfJucaUserBar ~ .app .main{padding-top:78px}}
+@media(max-width:650px){#prfJucaUserBar{position:fixed;top:10px;right:10px;margin:0}#prfJucaUserBar ~ .app .main{padding-top:74px}}
 </style>
 <div id="prfJucaUserBar"><span>👤 ${safeName}</span><button id="prfJucaLogout">Sair</button></div>
 <script>
