@@ -1,0 +1,53 @@
+name: Apply PRF JUCA timer popup fix
+on:
+  push:
+    branches: [ main ]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: ${{ !contains(github.event.head_commit.message, '[timer-popup-fix]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch timer
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          css="""
+          .timer-program{margin-top:16px;padding:14px;border:1px solid #29455f;border-radius:12px;background:#07111f}.timer-program-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.timer-program-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.timer-program-status{margin-top:8px;font-size:12px;color:#8da3c0}.timer-popup-mode{overflow:hidden}.timer-popup-mode .side,.timer-popup-mode .top{display:none!important}.timer-popup-mode .main{margin:0!important;width:100%!important;min-height:100vh;padding:18px!important}.timer-popup-mode .view{display:none!important}.timer-popup-mode #timer{display:block!important}.timer-popup-mode #timer>.card:nth-child(2){display:none}.timer-popup-mode #timer>.card:first-child{min-height:calc(100vh - 36px);display:flex;flex-direction:column;justify-content:center}.timer-popup-mode .clock{font-size:clamp(64px,12vw,120px);margin:25px 0}.timer-popup-mode .timer-program{max-width:720px;margin:20px auto 0;width:100%}.timer-popup-mode .form{max-width:720px;margin-left:auto;margin-right:auto;width:100%}
+          """
+          s=s.replace('</style>',css+'</style>',1)
+          html="""<div class="timer-program"><div class="section" style="margin-bottom:10px"><div><b>🎯 Tempo programado</b><div class="muted" style="font-size:11px;margin-top:3px">Escolha o tempo. Ao chegar a zero, o PRF JUCA emite um aviso sonoro.</div></div><span id="timerModeBadge" class="pill">CRONÔMETRO</span></div><div class="timer-program-grid"><div class="field"><label>Horas</label><input id="programHours" type="number" min="0" max="99" value="0"></div><div class="field"><label>Minutos</label><input id="programMinutes" type="number" min="0" max="59" value="25"></div><div class="field"><label>Segundos</label><input id="programSeconds" type="number" min="0" max="59" value="0"></div></div><div class="timer-program-actions"><button class="btn primary" id="startProgramTimer">⏳ Iniciar tempo programado</button><button class="btn ghost" id="stopProgramTimer">■ Parar programado</button></div><div id="programTimerStatus" class="timer-program-status">Nenhum tempo programado ativo.</div></div>"""
+          marker='<div class="timer-buttons"><button class="btn primary" id="startTimer">▶ Iniciar</button><button class="btn ghost" id="pauseTimer">Ⅱ Pausar</button><button class="btn danger" id="resetTimer">↻ Zerar</button></div>'
+          if 'id="startProgramTimer"' not in s:
+              if marker not in s: raise SystemExit('timer marker not found')
+              s=s.replace(marker,marker+html,1)
+          old="$('registerTimerSession').onclick=registerSession;$('openSeparateTimer').onclick=()=>window.open(location.href+'#timer','prf-juca-timer','width=560,height=820,resizable=yes');"
+          new="""$('registerTimerSession').onclick=registerSession;
+          function openSeparateTimer(){const u=new URL(location.href);u.hash='timer';u.searchParams.set('timerPopup','1');const w=window.open(u.href,'prf-juca-timer','width=760,height=760,resizable=yes,scrollbars=no');if(!w){alert('O navegador bloqueou a janela. Permita pop-ups para o PRF JUCA.');return;}try{w.focus()}catch{}}
+          $('openSeparateTimer').onclick=openSeparateTimer;
+          let programmed=false,programRemaining=0,programDuration=0,programStartedAt=null,programInterval=null;
+          function programValue(){const h=Math.max(0,Math.min(99,Number($('programHours').value)||0)),m=Math.max(0,Math.min(59,Number($('programMinutes').value)||0)),s=Math.max(0,Math.min(59,Number($('programSeconds').value)||0));return h*3600+m*60+s}
+          function formatSeconds(s){s=Math.max(0,Math.floor(s));return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,'0')).join(':')}
+          function programDisplay(){ $('clock').textContent=formatSeconds(programRemaining); $('sessionMinutes').value=Math.floor((programDuration-programRemaining)/60); }
+          function beepProgram(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(.001,c.currentTime);g.gain.exponentialRampToValueAtTime(.35,c.currentTime+.03);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.9);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+1)}catch(e){console.warn(e)}}
+          function stopProgramTimer(){programmed=false;programStartedAt=null;clearInterval(programInterval);programInterval=null;programRemaining=0;programDuration=0;$('programTimerStatus').textContent='Nenhum tempo programado ativo.';$('timerModeBadge').textContent='CRONÔMETRO';updateClock()}
+          function startProgramTimer(){const chosen=programValue();if(!chosen){alert('Informe um tempo maior que zero.');return}if(!programmed||programRemaining<=0){programDuration=chosen;programRemaining=chosen}programmed=true;timerRunning=false;clearInterval(timerInterval);timerInterval=null;programStartedAt=Date.now()-((programDuration-programRemaining)*1000);clearInterval(programInterval);programInterval=setInterval(()=>{programRemaining=Math.max(0,programDuration-Math.floor((Date.now()-programStartedAt)/1000));programDisplay();if(programRemaining<=0){clearInterval(programInterval);programInterval=null;programmed=false;$('programTimerStatus').textContent='🔔 Tempo concluído!';$('timerModeBadge').textContent='CONCLUÍDO';beepProgram();toast('⏰ Tempo programado concluído!')}},250);$('programTimerStatus').textContent='⏳ Tempo programado em andamento.';$('timerModeBadge').textContent='PROGRAMADO';programDisplay()}
+          $('startProgramTimer').onclick=startProgramTimer;$('stopProgramTimer').onclick=stopProgramTimer;
+          if(new URLSearchParams(location.search).get('timerPopup')==='1'){document.body.classList.add('timer-popup-mode');setTimeout(()=>{showView('timer');$('openSeparateTimer').style.display='none'},0)}
+          """
+          if old not in s: raise SystemExit('timer hook not found')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit patched file
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'fix: separate timer popup and programmed timer [timer-popup-fix]'
+          git push
