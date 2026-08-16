@@ -42,6 +42,114 @@
 .timer-popup-mode .timer-program {
   flex-shrink: 0;
 }
+
+/* PRF JUCA MODERN DASHBOARD V1 */
+:root{
+  --dash-cyan:#00e5ff;
+  --dash-blue:#2878ff;
+  --dash-purple:#a855f7;
+  --dash-green:#00f5a0;
+  --dash-red:#ff4d6d;
+  --dash-gold:#ffd84d;
+}
+body{
+  background:
+    radial-gradient(900px 500px at 8% -10%,rgba(0,196,255,.20),transparent 58%),
+    radial-gradient(850px 500px at 100% 0%,rgba(144,56,255,.20),transparent 58%),
+    #040814;
+}
+.side{
+  background:linear-gradient(180deg,#061321 0%,#050a16 100%);
+  border-right:1px solid rgba(0,229,255,.24);
+  box-shadow:18px 0 55px rgba(0,0,0,.18);
+}
+.brand{padding:14px 10px 18px;font-size:24px;letter-spacing:.3px}
+.brand small{display:block;margin-top:5px;letter-spacing:1.5px}
+.nav{gap:8px}
+.nav button{
+  min-height:46px;
+  border-radius:12px;
+  padding:12px 14px;
+  background:rgba(10,24,43,.88);
+  border-color:rgba(39,71,105,.38);
+  transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.nav button:hover{transform:translateX(2px)}
+.nav button.active{background:linear-gradient(135deg,rgba(24,70,112,.95),rgba(16,47,83,.95));border-color:var(--dash-cyan);box-shadow:0 0 22px rgba(0,229,255,.14)}
+.main{padding:28px 30px 34px}
+.top{margin-bottom:24px;align-items:flex-start}
+.top h1{font-size:34px;letter-spacing:-.8px}
+.top p{font-size:15px;margin-top:7px}
+.actions{align-items:center}
+.cloud-badge{min-height:48px;padding:8px 14px;border-radius:14px;background:rgba(4,32,35,.78);border-color:rgba(0,245,160,.18);box-shadow:0 8px 25px rgba(0,0,0,.18)}
+.top .btn{min-height:48px;border-radius:14px;padding:10px 15px}
+#dashboard>.grid:first-child{gap:18px}
+#dashboard>.grid:first-child>.card{
+  min-height:138px;
+  padding:20px 22px;
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(12,29,49,.97),rgba(6,15,29,.97));
+  border-color:rgba(53,88,124,.68);
+}
+#dashboard>.grid:first-child>.card::after{
+  content:"";position:absolute;right:-45px;top:-55px;width:145px;height:145px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,229,255,.14),transparent 68%);pointer-events:none;
+}
+#dashboard>.grid:first-child>.card:nth-child(2)::after{background:radial-gradient(circle,rgba(40,120,255,.17),transparent 68%)}
+#dashboard>.grid:first-child>.card:nth-child(3)::after{background:radial-gradient(circle,rgba(168,85,247,.18),transparent 68%)}
+#dashboard>.grid:first-child>.card:nth-child(4)::after{background:radial-gradient(circle,rgba(255,77,109,.16),transparent 68%)}
+#dashboard>.grid:first-child>.card::before{
+  position:absolute;left:20px;top:18px;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:20px;
+  background:rgba(0,229,255,.10);border:1px solid rgba(0,229,255,.16);
+}
+#dashboard>.grid:first-child>.card:nth-child(1)::before{content:"◷";color:#ffd84d;background:rgba(255,216,77,.10);border-color:rgba(255,216,77,.18)}
+#dashboard>.grid:first-child>.card:nth-child(2)::before{content:"▣";color:#4e9cff;background:rgba(40,120,255,.10);border-color:rgba(40,120,255,.18)}
+#dashboard>.grid:first-child>.card:nth-child(3)::before{content:"▦";color:#c084fc;background:rgba(168,85,247,.10);border-color:rgba(168,85,247,.18)}
+#dashboard>.grid:first-child>.card:nth-child(4)::before{content:"◎";color:#ff7189;background:rgba(255,77,109,.10);border-color:rgba(255,77,109,.18)}
+#dashboard>.grid:first-child .muted{display:block;margin-left:52px;padding-top:2px;font-size:13px}
+#dashboard>.grid:first-child .metric{margin-left:52px;font-size:31px;letter-spacing:-.6px;margin-top:9px}
+#dashboard>.grid:nth-child(2){gap:18px}
+#dashboard>.grid:nth-child(2)>.card,#dashboardSyllabus{border-radius:18px;background:linear-gradient(145deg,rgba(10,23,40,.97),rgba(5,14,27,.97));border-color:rgba(45,77,111,.72)}
+#dashboard>.grid:nth-child(2)>.card{min-height:300px}
+#dashboard .section h2{font-size:20px;letter-spacing:-.25px}
+#dashboard .section .muted{font-size:12px}
+#dayChart{min-height:220px;padding:22px 8px 10px;gap:12px;border-bottom-color:#28435f}
+#dayChart .bar{border-radius:8px 8px 3px 3px;box-shadow:0 0 16px rgba(0,229,255,.10);background:linear-gradient(180deg,#1ee9ff,#237cff)}
+#dayChart .bar span{font-size:10px;color:#9ab1c8}
+#dashboardDisciplineList{display:grid;gap:15px;margin-top:10px}
+#dashboardDisciplineList>div{padding:2px 0 12px;border-bottom:1px solid rgba(45,77,111,.55)}
+#dashboardDisciplineList>div:last-child{border-bottom:0}
+#dashboardSyllabus{margin-top:18px;padding:20px}
+.dashboard-modern-bottom{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:18px}
+.dashboard-modern-card{border:1px solid rgba(45,77,111,.72);border-radius:18px;padding:20px;background:linear-gradient(145deg,rgba(10,23,40,.97),rgba(5,14,27,.97));box-shadow:0 16px 40px rgba(0,0,0,.22)}
+.dashboard-modern-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.dashboard-modern-title h2{margin:0;font-size:20px}
+.dashboard-modern-list{display:grid;gap:8px}
+.dashboard-modern-row{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(45,77,111,.45)}
+.dashboard-modern-row:last-child{border-bottom:0}
+.dashboard-modern-dot{width:10px;height:10px;border-radius:50%;background:var(--dash-cyan);box-shadow:0 0 12px currentColor}
+.dashboard-modern-name{font-weight:850;overflow-wrap:anywhere}
+.dashboard-modern-meta{font-size:11px;color:#7892ad;margin-top:3px}
+.dashboard-modern-value{font-weight:900;color:#00e5ff;white-space:nowrap}
+.dashboard-performance{display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:center}
+.dashboard-ring{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#00e5a0 var(--score),#1c3048 0);position:relative}
+.dashboard-ring::after{content:"";position:absolute;inset:13px;border-radius:50%;background:#07111f;border:1px solid #29455f}
+.dashboard-ring-content{position:relative;z-index:1;text-align:center}
+.dashboard-ring-score{font-size:30px;font-weight:950}
+.dashboard-ring-label{font-size:10px;color:#8da3c0;margin-top:3px}
+.dashboard-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dashboard-kpi{padding:14px 10px;border-left:1px solid #29455f;text-align:center}
+.dashboard-kpi:first-child{border-left:0}
+.dashboard-kpi strong{display:block;font-size:24px}
+.dashboard-kpi span{display:block;color:#8da3c0;font-size:10px;margin-top:4px}
+.dashboard-kpi.correct strong{color:#00f5a0}.dashboard-kpi.wrong strong{color:#ff4d6d}.dashboard-kpi.total strong{color:#38a0ff}
+@media(max-width:1100px){.dashboard-modern-bottom{grid-template-columns:1fr}.main{padding:24px 20px}}
+@media(max-width:800px){.top h1{font-size:28px}.actions{width:100%}.actions .btn{flex:1}.dashboard-performance{grid-template-columns:1fr;justify-items:center}.dashboard-kpis{width:100%}}
+@media(max-width:650px){.main{padding:16px 12px 24px}.top h1{font-size:24px}.top{gap:12px}.top .actions{display:grid;grid-template-columns:1fr 1fr}.top .actions .cloud-badge{grid-column:1/-1}.dashboard-modern-bottom{gap:12px}#dashboard>.grid:first-child{grid-template-columns:1fr 1fr!important}.dashboard-kpis{grid-template-columns:1fr 1fr 1fr}.dashboard-kpi{padding:10px 5px}.dashboard-kpi strong{font-size:19px}.dashboard-ring{width:135px;height:135px}}
+@media(max-width:430px){#dashboard>.grid:first-child{grid-template-columns:1fr!important}.top .actions{grid-template-columns:1fr}.top .actions .cloud-badge{grid-column:auto}.dashboard-kpis{gap:4px}.dashboard-kpi strong{font-size:17px}}
+
 </style>
 </head>
 <body>
@@ -135,4 +243,43 @@ $('saveScheduleSettings').onclick=()=>{db.schedule.hours=Math.max(1,Number($('sc
 function renderAll(){renderDashboard();renderSessions();renderLessons();renderQuestions();renderSimulados();renderHistory();renderDisciplines();renderSyllabus();$('scheduleHours').value=db.schedule.hours||10;$('schedulePerDay').value=db.schedule.perDay||1;renderSchedule()}
 $('chooseBackup').onclick=()=>{const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.onchange=async()=>{const f=input.files[0];if(!f)return;try{db=normalizeDB(JSON.parse(await f.text()));await persist('Backup restaurado.')}catch{alert('Arquivo de backup inválido.')}};input.click()};$('backupNow').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download=`prf-juca-backup-${today}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('Backup baixado.')};
 renderAll();updateClock();checkCloud();
+
+/* PRF JUCA MODERN DASHBOARD BEHAVIOR V1 */
+(function(){
+  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function minutes(v){return Math.max(0,Number(v)||0)}
+  function fmtMin(v){const m=Math.round(minutes(v));return Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m'}
+  function renderModernDashboard(){
+    const dash=document.getElementById('dashboard');
+    if(!dash || !window.db) return;
+    let box=document.getElementById('dashboardModernBottom');
+    if(!box){
+      box=document.createElement('div');box.id='dashboardModernBottom';box.className='dashboard-modern-bottom';
+      box.innerHTML='<div class="dashboard-modern-card"><div class="dashboard-modern-title"><h2>📅 Atividade recente</h2><span class="pill">SESSÕES</span></div><div id="modernRecentSessions" class="dashboard-modern-list"></div></div><div class="dashboard-modern-card"><div class="dashboard-modern-title"><h2>◷ Desempenho</h2><span class="pill">QUESTÕES</span></div><div id="modernPerformance" class="dashboard-performance"></div></div>';
+      dash.appendChild(box);
+    }
+    const sessions=Array.isArray(db.sessions)?db.sessions.slice():[];
+    sessions.sort((a,b)=>String(b.date||b.createdAt||'').localeCompare(String(a.date||a.createdAt||'')));
+    const recent=sessions.slice(0,5);
+    const recentEl=document.getElementById('modernRecentSessions');
+    if(recentEl){
+      recentEl.innerHTML=recent.length?recent.map((s,i)=>{
+        const d=db.disciplines?.find(x=>String(x.id)===String(s.subjectId)||String(x.name)===String(s.subject));
+        const color=d?.color||'#00e5ff';
+        const name=s.subject||s.discipline||d?.name||'Sessão de estudo';
+        return '<div class="dashboard-modern-row"><i class="dashboard-modern-dot" style="background:'+esc(color)+';color:'+esc(color)+'"></i><div><div class="dashboard-modern-name">'+esc(name)+'</div><div class="dashboard-modern-meta">'+esc(s.date||'')+(s.content?' • '+esc(s.content):'')+'</div></div><strong class="dashboard-modern-value">'+fmtMin(s.minutes??s.duration??0)+'</strong></div>'
+      }).join(''):'<div class="empty">Nenhuma sessão registrada ainda.</div>';
+    }
+    const qs=Array.isArray(db.questions)?db.questions:[];
+    const total=qs.reduce((n,q)=>n+Math.max(0,Number(q.total)||0),0);
+    const correct=qs.reduce((n,q)=>n+Math.max(0,Number(q.correct)||0),0);
+    const wrong=Math.max(0,total-correct);
+    const score=total?Math.round(correct/total*100):0;
+    const perf=document.getElementById('modernPerformance');
+    if(perf) perf.innerHTML='<div class="dashboard-ring" style="--score:'+score+'%"><div class="dashboard-ring-content"><div class="dashboard-ring-score">'+score+'%</div><div class="dashboard-ring-label">aproveitamento</div></div></div><div class="dashboard-kpis"><div class="dashboard-kpi correct"><strong>'+correct+'</strong><span>Acertos</span></div><div class="dashboard-kpi wrong"><strong>'+wrong+'</strong><span>Erros</span></div><div class="dashboard-kpi total"><strong>'+total+'</strong><span>Total</span></div></div>';
+  }
+  setInterval(renderModernDashboard,1500);
+  document.addEventListener('DOMContentLoaded',renderModernDashboard);
+})();
+
 </script></body></html>
