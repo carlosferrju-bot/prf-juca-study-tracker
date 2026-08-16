@@ -15,6 +15,33 @@
 .autobackup-box{display:grid;gap:10px}.autobackup-status{padding:10px 12px;border-radius:9px;background:#071525;border:1px solid #29455f;font-size:12px}.autobackup-status.on{border-color:#00f5a066;color:#00f5a0}.autobackup-status.off{border-color:#ffe45b55;color:#ffe45b}.autobackup-status.error{border-color:#ff4d6d66;color:#ff7890}.autobackup-actions{display:flex;gap:8px;flex-wrap:wrap}.cloud-status{padding:10px 12px;border-radius:9px;background:#071525;border:1px solid #29455f;font-size:12px}.cloud-status.on{border-color:#00f5a066;color:#00f5a0}.cloud-status.off{border-color:#ffe45b55;color:#ffe45b}.cloud-status.error{border-color:#ff4d6d66;color:#ff7890}.cloud-login{position:fixed;inset:0;background:rgba(2,7,18,.88);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}.cloud-login.hidden{display:none!important}.cloud-login .box{width:min(430px,100%);background:linear-gradient(145deg,#0c1527,#08111f);border:1px solid #00e5ff;border-radius:18px;padding:24px;box-shadow:0 25px 80px #000c}.cloud-login h2{margin:0 0 8px}.cloud-login p{color:#9fb2c9;font-size:13px;line-height:1.5}.cloud-login input{margin-top:8px}.cloud-login button{width:100%;margin-top:12px}.cloud-login .err{color:#ff7890;font-size:12px;min-height:18px;margin-top:8px}.cloud-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:99px;font-size:11px;font-weight:900;background:#00f5a014;color:#00f5a0;border:1px solid #00f5a033}
 
 .timer-program{margin-top:16px;padding:14px;border:1px solid #29455f;border-radius:12px;background:#07111f}.timer-program-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.timer-program-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.timer-program-status{margin-top:8px;font-size:12px;color:#8da3c0}.timer-popup-mode{overflow:hidden}.timer-popup-mode .side,.timer-popup-mode .top{display:none!important}.timer-popup-mode .main{margin:0!important;width:100%!important;min-height:100vh;padding:18px!important}.timer-popup-mode .view{display:none!important}.timer-popup-mode #timer{display:block!important}.timer-popup-mode #timer>.card:nth-child(2){display:none}.timer-popup-mode #timer>.card:first-child{min-height:calc(100vh - 36px);display:flex;flex-direction:column;justify-content:center}.timer-popup-mode .clock{font-size:clamp(64px,12vw,120px);margin:25px 0}.timer-popup-mode .timer-program{max-width:720px;margin:20px auto 0;width:100%}.timer-popup-mode .form{max-width:720px;margin-left:auto;margin-right:auto;width:100%}
+
+/* PRF JUCA TIMER POPUP SCROLL FIX */
+.timer-popup-mode {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  min-height: 100vh;
+  height: auto !important;
+}
+.timer-popup-mode .main {
+  overflow: visible !important;
+  height: auto !important;
+  min-height: 100vh;
+}
+.timer-popup-mode #timer {
+  min-height: 100vh;
+  height: auto !important;
+}
+.timer-popup-mode #timer > .card:first-child {
+  min-height: calc(100vh - 36px);
+  height: auto !important;
+  justify-content: flex-start !important;
+  padding-bottom: 30px;
+}
+.timer-popup-mode .form,
+.timer-popup-mode .timer-program {
+  flex-shrink: 0;
+}
 </style>
 </head>
 <body>
