@@ -282,4 +282,85 @@ renderAll();updateClock();checkCloud();
   document.addEventListener('DOMContentLoaded',renderModernDashboard);
 })();
 
-</script></body></html>
+</script><!-- PRF_JUCA_TODAY_HIGHLIGHT -->
+<style id="prf-juca-today-highlight">
+  /* Destaque forte e inequívoco para o dia atual no cronograma */
+  .calendar-cell.today {
+    background: linear-gradient(180deg,#0b2d45 0%,#0b2032 55%,#091827 100%) !important;
+    box-shadow: inset 0 5px 0 #00e5ff, inset 0 0 0 2px #00e5ff88, 0 0 24px #00e5ff22 !important;
+    position: relative;
+    z-index: 2;
+  }
+  .calendar-cell.today::after {
+    content: "DIA DE HOJE";
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 7px;
+    line-height: 1;
+    letter-spacing: 1px;
+    font-weight: 950;
+    color: #07101b;
+    background: #00e5ff;
+    padding: 4px 7px;
+    border-radius: 4px;
+    box-shadow: 0 0 12px #00e5ff66;
+    pointer-events: none;
+  }
+  .calendar-cell.today .calendar-date {
+    border-bottom-color: #00e5ff88 !important;
+    padding-top: 8px;
+  }
+  .calendar-cell.today .calendar-date strong {
+    color: #00e5ff !important;
+    text-shadow: 0 0 12px #00e5ff88;
+    transform: scale(1.08);
+  }
+  .calendar-cell.today .calendar-study {
+    border: 2px solid #00e5ff !important;
+    border-left: 5px solid #00e5ff !important;
+    background: linear-gradient(180deg,#123b56,#0d263b) !important;
+    box-shadow: 0 0 0 1px #00e5ff33, 0 0 24px #00e5ff30, 0 12px 24px rgba(0,0,0,.28) !important;
+    transform: translateY(-2px);
+  }
+  .calendar-cell.today .calendar-study-title {
+    text-shadow: 0 0 10px #00e5ff44;
+  }
+  .calendar-cell.today .calendar-study-action {
+    border-color: #00e5ff !important;
+    box-shadow: 0 0 10px #00e5ff22;
+  }
+</style>
+<script>
+(() => {
+  const applyToday = () => {
+    const cells = document.querySelectorAll('.calendar-cell');
+    if (!cells.length) return;
+    const now = new Date();
+    const day = String(now.getDate());
+    let found = false;
+
+    cells.forEach(cell => {
+      const date = cell.querySelector('.calendar-date strong');
+      if (!date) return;
+      const isToday = date.textContent.trim() === day &&
+        !cell.classList.contains('outside');
+      cell.classList.toggle('today', isToday || cell.classList.contains('today'));
+      if (isToday) found = true;
+    });
+
+    /* Se a rotina original já marcou .today, preserva-a; caso contrário,
+       marca a célula do dia corrente da semana exibida. */
+    if (!found) {
+      const marked = document.querySelector('.calendar-cell.today');
+      if (marked) marked.scrollIntoView({block:'nearest', inline:'nearest'});
+    }
+  };
+
+  applyToday();
+  new MutationObserver(applyToday).observe(document.body, {childList:true, subtree:true});
+})();
+</script>
+
+</body></html>
