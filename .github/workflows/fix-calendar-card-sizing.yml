@@ -1,0 +1,41 @@
+name: Fix weekly calendar card sizing
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply uniform weekly card sizing
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
+          old = ".calendar-study{width:100%;min-height:145px;border:1px solid #29455f;border-left:4px solid var(--subject-color);border-radius:6px;background:linear-gradient(180deg,#10253a,#0d1e31);padding:16px 9px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(0,0,0,.18)}"
+          new = ".calendar-study{width:100%;height:180px;min-height:180px;max-height:180px;box-sizing:border-box;overflow:hidden;border:1px solid #29455f;border-left:4px solid var(--subject-color);border-radius:6px;background:linear-gradient(180deg,#10253a,#0d1e31);padding:12px 9px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(0,0,0,.18)}"
+          if old not in s:
+              raise SystemExit("target CSS block not found")
+          s = s.replace(old, new, 1)
+          old2 = ".calendar-study-title{font-size:14px;font-weight:950;line-height:1.28;color:#fff;text-align:center;overflow-wrap:anywhere}"
+          new2 = ".calendar-study-title{font-size:14px;font-weight:950;line-height:1.28;height:54px;max-height:54px;overflow:hidden;color:#fff;text-align:center;overflow-wrap:anywhere;display:flex;align-items:center;justify-content:center}"
+          if old2 not in s:
+              raise SystemExit("title CSS block not found")
+          s = s.replace(old2, new2, 1)
+          old3 = ".calendar-study-time{font-size:13px;font-weight:950;color:#00e5ff;margin-top:16px}"
+          new3 = ".calendar-study-time{font-size:13px;font-weight:950;color:#00e5ff;margin-top:7px}"
+          if old3 in s:
+              s = s.replace(old3, new3, 1)
+          p.write_text(s, encoding="utf-8")
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix uniform weekly cronograma card sizing"
+          git push
