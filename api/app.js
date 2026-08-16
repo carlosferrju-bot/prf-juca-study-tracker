@@ -1,17 +1,20 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { requireSession } from './_auth.js';
+import { configured, currentUser } from './_auth.js';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
-  const user = await requireSession(req, res);
-  if (!user) return;
+  if (!configured()) return res.status(503).send('O armazenamento do PRF JUCA ainda não está configurado na Vercel.');
+
+  const user = await currentUser(req);
+  if (!user) return res.redirect(302, '/');
 
   try {
     let html = await fs.readFile(path.join(root, 'index.html'), 'utf8');
+    const safeName = String(user.name).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
     const overlay = `
 <style>
 #prfJucaUserBar{position:fixed;right:18px;top:14px;z-index:9999;display:flex;align-items:center;gap:8px;background:#071321ee;border:1px solid #29455f;border-radius:12px;padding:7px 9px;box-shadow:0 12px 35px #0008;backdrop-filter:blur(10px);font:12px Arial,Segoe UI,sans-serif;color:#dcecff}
@@ -19,7 +22,7 @@ export default async function handler(req, res) {
 #prfJucaUserBar button:hover{border-color:#00e5ff}
 @media(max-width:650px){#prfJucaUserBar{position:static;margin:8px;justify-content:center}}
 </style>
-<div id="prfJucaUserBar"><span>👤 ${String(user.name).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}</span><button id="prfJucaLogout">Sair</button></div>
+<div id="prfJucaUserBar"><span>👤 ${safeName}</span><button id="prfJucaLogout">Sair</button></div>
 <script>
 (function(){
  const b=document.getElementById('prfJucaLogout');
