@@ -1,0 +1,39 @@
+name: Apply PRF JUCA timer alarm
+on: [push]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch programmed timer
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          pattern = re.compile(r"let programmed=false,programRemaining=0,programDuration=0,programStartedAt=null,programInterval=null;.*?\n\$\('startProgramTimer'\)\.onclick=startProgramTimer;\$\('stopProgramTimer'\)\.onclick=stopProgramTimer;", re.S)
+          replacement = r'''let programmed=false,programDuration=0,programTargetSeconds=0,programAlarmed=false,programInterval=null,alarmAudioContext=null,alarmGain=null;
+          function programValue(){const h=Math.max(0,Math.min(99,Number($('programHours').value)||0)),m=Math.max(0,Math.min(59,Number($('programMinutes').value)||0)),s=Math.max(0,Math.min(59,Number($('programSeconds').value)||0));return h*3600+m*60+s}
+          function formatSeconds(s){s=Math.max(0,Math.floor(s));return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,'0')).join(':')}
+          function prepareAlarmAudio(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;alarmAudioContext=alarmAudioContext||new C();if(alarmAudioContext.state==='suspended')alarmAudioContext.resume()}catch(e){console.warn(e)}}
+          function beepProgram(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=alarmAudioContext||new C();alarmAudioContext=c;if(c.state==='suspended')c.resume();const master=c.createGain();master.gain.setValueAtTime(.0001,c.currentTime);master.gain.linearRampToValueAtTime(.75,c.currentTime+.08);master.connect(c.destination);alarmGain=master;const started=c.currentTime,duration=10,pulse=.8;for(let i=0;i<Math.ceil(duration/pulse);i++){const t=started+i*pulse;[880,1046.5,660].forEach((freq,j)=>{const o=c.createOscillator(),g=c.createGain();o.type='square';o.frequency.setValueAtTime(freq+(j===1?18:0),t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.38,t+.035);g.gain.exponentialRampToValueAtTime(.0001,Math.min(t+.42,started+duration));o.connect(g);g.connect(master);o.start(t);o.stop(Math.min(t+.45,started+duration))})}master.gain.setValueAtTime(.75,started+duration-.25);master.gain.exponentialRampToValueAtTime(.0001,started+duration);setTimeout(()=>{try{master.disconnect()}catch{}},10500)}catch(e){console.warn(e)}}
+          function checkProgramAlarm(){if(!programmed||programAlarmed)return;if(timerSeconds>=programTargetSeconds){programAlarmed=true;$('programTimerStatus').textContent='🔔 Tempo atingido! O cronômetro continua contando.';$('timerModeBadge').textContent='ALARME DISPARADO';beepProgram();toast('⏰ Tempo programado atingido! O cronômetro continua contando.')}}
+          function stopProgramTimer(){programmed=false;programAlarmed=false;programTargetSeconds=0;programDuration=0;clearInterval(programInterval);programInterval=null;$('programTimerStatus').textContent='Nenhum tempo programado ativo.';$('timerModeBadge').textContent='CRONÔMETRO';updateClock()}
+          function startProgramTimer(){const chosen=programValue();if(!chosen){alert('Informe um tempo maior que zero.');return}prepareAlarmAudio();programmed=true;programAlarmed=false;programDuration=chosen;programTargetSeconds=timerSeconds+chosen;clearInterval(programInterval);programInterval=setInterval(checkProgramAlarm,250);if(!timerRunning){timerRunning=true;timerStartedAt=Date.now()-timerSeconds*1000;clearInterval(timerInterval);timerInterval=setInterval(()=>{timerSeconds=Math.floor((Date.now()-timerStartedAt)/1000);updateClock();checkProgramAlarm()},1000)}$('programTimerStatus').textContent=`⏳ Alarme programado para ${formatSeconds(chosen)}. O cronômetro continuará contando após o alarme.`;$('timerModeBadge').textContent='ALARME PROGRAMADO';updateClock()}
+          $('startProgramTimer').onclick=startProgramTimer;$('stopProgramTimer').onclick=stopProgramTimer;'''
+          ns, count = pattern.subn(replacement, s, count=1)
+          if count != 1:
+              raise SystemExit('Timer programmed block not found')
+          p.write_text(ns, encoding='utf-8')
+          PY
+      - name: Commit patched index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "fix: programmed timer continues after 10s alarm"
+          git push
