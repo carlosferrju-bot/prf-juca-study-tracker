@@ -1,0 +1,42 @@
+name: Fix timer popup scrolling
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Patch timer popup scrolling
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '/* PRF JUCA TIMER POPUP SCROLL FIX */'
+          if marker not in s:
+              css = '''\n/* PRF JUCA TIMER POPUP SCROLL FIX */\n.timer-popup-mode {\n  overflow-y: auto !important;\n  overflow-x: hidden !important;\n  min-height: 100vh;\n  height: auto !important;\n}\n.timer-popup-mode .main {\n  overflow: visible !important;\n  height: auto !important;\n  min-height: 100vh;\n}\n.timer-popup-mode #timer {\n  min-height: 100vh;\n  height: auto !important;\n}\n.timer-popup-mode #timer > .card:first-child {\n  min-height: calc(100vh - 36px);\n  height: auto !important;\n  justify-content: flex-start !important;\n  padding-bottom: 30px;\n}\n.timer-popup-mode .form,\n.timer-popup-mode .timer-program {\n  flex-shrink: 0;\n}\n'''
+              s = s.replace('</style>', css + '</style>', 1)
+              p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "fix: enable scrolling in separate timer window"
+          git push
