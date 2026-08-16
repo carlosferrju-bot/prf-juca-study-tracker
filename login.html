@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PRF JUCA • Acesso</title>
+<style>
+:root{--bg:#050814;--panel:#0b1222;--line:#243958;--txt:#eef8ff;--muted:#8da3c0;--cyan:#00e5ff;--blue:#2878ff;--red:#ff4d6d;--green:#00f5a0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 15% 5%,#06334a 0,transparent 30%),radial-gradient(circle at 90% 10%,#29104f 0,transparent 28%),var(--bg);color:var(--txt);font:14px Arial,Segoe UI,sans-serif}.box{width:min(440px,100%);background:linear-gradient(145deg,#0c1527f5,#08111ff5);border:1px solid #00e5ff88;border-radius:20px;padding:28px;box-shadow:0 25px 70px #000b}.brand{text-align:center;font-size:27px;font-weight:950;margin-bottom:6px}.brand span{color:var(--cyan)}.sub{text-align:center;color:var(--muted);margin:0 0 22px}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#07111f;border:1px solid #29455f;padding:4px;border-radius:11px;margin-bottom:18px}.tabs button{border:0;background:transparent;color:#8da3c0;padding:10px;border-radius:8px;font-weight:900;cursor:pointer}.tabs button.active{background:linear-gradient(135deg,#00b9d4,#2878ff);color:#fff}.form{display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font-size:12px;font-weight:850;color:#b7c9de}.field input{width:100%;background:#07101e;border:1px solid #2b4867;color:#fff;border-radius:9px;padding:12px;outline:0}.field input:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #00e5ff20}.btn{border:1px solid var(--cyan);background:linear-gradient(135deg,#00b9d4,#2878ff);color:#fff;border-radius:10px;padding:12px;font-weight:950;cursor:pointer;font-size:14px}.btn:disabled{opacity:.6;cursor:wait}.message{display:none;margin-top:13px;padding:10px 12px;border-radius:9px;line-height:1.4}.message.show{display:block}.message.error{border:1px solid #ff4d6d66;background:#ff4d6d12;color:#ff8aa0}.message.ok{border:1px solid #00f5a066;background:#00f5a012;color:#00f5a0}.hint{text-align:center;color:#667f9c;font-size:11px;margin-top:16px;line-height:1.5}
+</style>
+</head>
+<body>
+<main class="box">
+  <div class="brand">☁ <span>PRF JUCA</span></div>
+  <p class="sub">Seu ambiente de estudos, com seus dados salvos na nuvem.</p>
+  <div class="tabs"><button id="tabLogin" class="active">Entrar</button><button id="tabRegister">Criar conta</button></div>
+
+  <form id="loginForm" class="form">
+    <div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="email" required></div>
+    <div class="field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+    <button class="btn" type="submit">🔐 Entrar no PRF JUCA</button>
+  </form>
+
+  <form id="registerForm" class="form" style="display:none">
+    <div class="field"><label for="registerName">Nome</label><input id="registerName" type="text" autocomplete="name" required></div>
+    <div class="field"><label for="registerEmail">E-mail</label><input id="registerEmail" type="email" autocomplete="email" required></div>
+    <div class="field"><label for="registerPassword">Senha</label><input id="registerPassword" type="password" minlength="6" autocomplete="new-password" required></div>
+    <div class="field"><label for="registerPassword2">Confirmar senha</label><input id="registerPassword2" type="password" minlength="6" autocomplete="new-password" required></div>
+    <button class="btn" type="submit">✨ Criar minha conta</button>
+  </form>
+
+  <div id="message" class="message"></div>
+  <div class="hint">Depois do login, seus dados ficam vinculados à sua conta e podem ser acessados de outro computador ou celular.</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const loginForm=$('loginForm'), registerForm=$('registerForm'), message=$('message');
+function showMessage(text,type='error'){message.textContent=text;message.className='message show '+type}
+function tab(which){const login=which==='login';$('tabLogin').classList.toggle('active',login);$('tabRegister').classList.toggle('active',!login);loginForm.style.display=login?'grid':'none';registerForm.style.display=login?'none':'grid';message.className='message'}
+$('tabLogin').onclick=()=>tab('login');$('tabRegister').onclick=()=>tab('register');
+async function auth(payload){const r=await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let d={};try{d=await r.json()}catch{}if(!r.ok)throw new Error(d.message||'Não foi possível concluir a operação.');return d}
+(async()=>{try{const r=await fetch('/api/auth',{cache:'no-store'});const d=await r.json();if(d.authenticated)location.replace('/app')}catch{}})();
+loginForm.addEventListener('submit',async e=>{e.preventDefault();const btn=loginForm.querySelector('button');btn.disabled=true;try{await auth({action:'login',email:$('loginEmail').value,password:$('loginPassword').value});location.replace('/app')}catch(err){showMessage(err.message)}finally{btn.disabled=false}});
+registerForm.addEventListener('submit',async e=>{e.preventDefault();if($('registerPassword').value!==$('registerPassword2').value){showMessage('As senhas não coincidem.');return}const btn=registerForm.querySelector('button');btn.disabled=true;try{await auth({action:'register',name:$('registerName').value,email:$('registerEmail').value,password:$('registerPassword').value});location.replace('/app')}catch(err){showMessage(err.message)}finally{btn.disabled=false}});
+</script>
+</body>
+</html>
