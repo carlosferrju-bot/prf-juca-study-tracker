@@ -1,0 +1,206 @@
+name: Fix cronograma weekly and monthly views
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-cronograma-weekly-monthly.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fix cronograma
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          css_marker = '/* PRF JUCA CRONOGRAMA WEEKLY/MONTHLY FIX V1 */'
+          css = r'''
+          /* PRF JUCA CRONOGRAMA WEEKLY/MONTHLY FIX V1 */
+          .calendar-cell.today{
+            background:linear-gradient(180deg,#123d58 0%,#0d2940 52%,#0a1d2e 100%) !important;
+            border:2px solid #00e5ff !important;
+            box-shadow:inset 0 0 0 2px rgba(0,229,255,.22),inset 0 6px 0 #00e5ff,0 0 28px rgba(0,229,255,.28) !important;
+            z-index:3;
+          }
+          .calendar-cell.today::before{
+            content:"HOJE";
+            position:absolute;
+            top:5px;
+            left:50%;
+            transform:translateX(-50%);
+            z-index:5;
+            background:#00e5ff;
+            color:#04101a;
+            border-radius:5px;
+            padding:4px 9px;
+            font-size:9px;
+            line-height:1;
+            letter-spacing:1.2px;
+            font-weight:950;
+            box-shadow:0 0 16px rgba(0,229,255,.65);
+            pointer-events:none;
+          }
+          .calendar-cell.today .calendar-date{
+            border-bottom:2px solid rgba(0,229,255,.65) !important;
+            padding-top:10px;
+          }
+          .calendar-cell.today .calendar-date strong{
+            color:#00e5ff !important;
+            font-size:28px;
+            text-shadow:0 0 14px rgba(0,229,255,.75);
+          }
+          .calendar-cell.today .calendar-date b{display:none}
+          .calendar-cell.today .calendar-study{
+            border:2px solid #00e5ff !important;
+            border-left:5px solid #00e5ff !important;
+            background:linear-gradient(180deg,#174866,#0d2940) !important;
+            box-shadow:0 0 0 1px rgba(0,229,255,.28),0 0 25px rgba(0,229,255,.28),0 12px 25px rgba(0,0,0,.3) !important;
+          }
+          .month-cell.today{
+            background:linear-gradient(145deg,#164b67 0%,#0e2d43 48%,#0a1d2d 100%) !important;
+            border:3px solid #00e5ff !important;
+            box-shadow:inset 0 0 0 2px rgba(0,229,255,.22),inset 0 6px 0 #00e5ff,0 0 32px rgba(0,229,255,.42) !important;
+            opacity:1 !important;
+            z-index:4;
+          }
+          .month-cell.today::before{
+            content:"HOJE";
+            position:absolute;
+            top:6px;
+            right:6px;
+            z-index:6;
+            background:#00e5ff;
+            color:#04101a;
+            border-radius:5px;
+            padding:5px 8px;
+            font-size:9px;
+            line-height:1;
+            letter-spacing:1px;
+            font-weight:950;
+            box-shadow:0 0 14px rgba(0,229,255,.7);
+            pointer-events:none;
+          }
+          .month-cell.today .month-date{
+            padding:7px 5px 8px;
+            margin:-1px -1px 8px;
+            border-bottom:2px solid rgba(0,229,255,.65);
+          }
+          .month-cell.today .month-date strong{
+            color:#00e5ff !important;
+            font-size:23px;
+            text-shadow:0 0 14px rgba(0,229,255,.8);
+          }
+          .month-cell.today .month-study{
+            border:2px solid #00e5ff !important;
+            border-left:5px solid #00e5ff !important;
+            background:linear-gradient(180deg,#174866,#0d2940) !important;
+            box-shadow:0 0 22px rgba(0,229,255,.28) !important;
+          }
+          .month-cell.today .month-study-name{color:#fff !important;text-shadow:0 0 8px rgba(0,229,255,.28)}
+          '''
+          if css_marker not in text:
+              text = text.replace('</style>', css + '\n</style>', 1)
+
+          start = text.index('function dateKey(d){')
+          end = text.index('\nfunction toggleScheduleDay', start)
+
+          replacement = r'''function dateKey(d){
+            const y=d.getFullYear();
+            const m=String(d.getMonth()+1).padStart(2,'0');
+            const day=String(d.getDate()).padStart(2,'0');
+            return `${y}-${m}-${day}`;
+          }
+          function getCurrentWeek(){
+            const base=new Date();
+            base.setHours(0,0,0,0);
+            const sunday=new Date(base);
+            sunday.setDate(base.getDate()-base.getDay());
+            return Array.from({length:7},(_,i)=>{
+              const d=new Date(sunday);
+              d.setDate(sunday.getDate()+i);
+              return d;
+            });
+          }
+          function buildWeekSchedule(){
+            const week=getCurrentWeek();
+            const disciplines=getScheduleDisciplines();
+            const perDay=Math.max(1,Number(db.schedule.perDay)||1);
+            if(!disciplines.length)return week.map(date=>({date,slots:[]}));
+            const counts=Object.fromEntries(disciplines.map(d=>[d.name,1]));
+            const totalSlots=week.length*perDay;
+            const remaining=Math.max(0,totalSlots-disciplines.length);
+            const weightSum=disciplines.reduce((a,d)=>a+(Number(d.weight)||1),0);
+            const extras=Object.fromEntries(disciplines.map(d=>[d.name,Math.floor(remaining*(Number(d.weight)||1)/weightSum)]));
+            let used=disciplines.reduce((a,d)=>a+extras[d.name],0),rem=remaining-used;
+            disciplines.slice().sort((a,b)=>seededHash(a.name)-seededHash(b.name)).forEach(d=>{if(rem>0){extras[d.name]++;rem--}});
+            disciplines.forEach(d=>counts[d.name]+=extras[d.name]);
+            const remainingCount={...counts},result=[];
+            let idx=0;
+            for(const date of week){
+              const slots=[],usedNames=new Set();
+              for(let n=0;n<perDay;n++){
+                let candidates=disciplines.filter(d=>remainingCount[d.name]>0&&!usedNames.has(d.name)).sort((a,b)=>remainingCount[b.name]-remainingCount[a.name]||seededHash(a.name+dateKey(date)+idx)-seededHash(b.name+dateKey(date)+idx));
+                if(!candidates.length)candidates=disciplines.filter(d=>remainingCount[d.name]>0);
+                if(!candidates.length)break;
+                const d=candidates[0];
+                remainingCount[d.name]--;
+                usedNames.add(d.name);
+                slots.push(d);
+              }
+              result.push({date,slots});
+              idx++;
+            }
+            return result;
+          }
+          function renderSchedule(){
+            const perDay=Math.max(1,Number(db.schedule.perDay)||1);
+            $('cronogramaModePill').textContent=`${perDay} disciplina${perDay>1?'s':''}/dia`;
+            const weekSchedule=buildWeekSchedule();
+            const monthSchedule=buildSchedule(0);
+            const weekStart=weekSchedule[0]?.date||new Date(),weekEnd=weekSchedule[6]?.date||weekStart;
+            const dow=['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
+            const weekTitle=weekStart.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+            let header=`<div class="calendar-month-bar"><div class="calendar-month-title">Semana atual</div><div class="calendar-month-range">${fmtDate(dateKey(weekStart))} → ${fmtDate(dateKey(weekEnd))}</div></div><div class="calendar-head-row">${dow.map((x,i)=>`<div class="calendar-week-header ${i===0||i===6?'weekend':''}"><span>${x}</span><small>${String(weekSchedule[i].date.getDate()).padStart(2,'0')}</small></div>`).join('')}</div>`;
+            const weekCells=weekSchedule.map(item=>{
+              const k=dateKey(item.date),isToday=k===today;
+              return `<div class="calendar-cell ${item.date.getDay()===0||item.date.getDay()===6?'weekend':''} ${isToday?'today':''}"><div class="calendar-date"><strong>${item.date.getDate()}</strong><span>${dow[item.date.getDay()]}</span>${isToday?'<b>HOJE</b>':''}</div><div class="calendar-cell-content">${item.slots.length?item.slots.map(d=>{const completed=!!db.schedule.completed[`${k}|${d.name}`];return `<div class="calendar-study ${completed?'done':''}" style="--subject-color:${d.color||'#00e5ff'}"><div class="calendar-study-status">${completed?'CONCLUÍDO':'ESTUDO'}</div><div class="calendar-study-title">${esc(d.name)}</div><div class="calendar-study-time">${fmtMin(Math.max(1,Math.round((Number(db.schedule.hours)||10)*60/(7*perDay))))}</div><div class="calendar-study-meta"><span>${esc(d.name)}</span></div><button class="calendar-study-action ${completed?'done-action':''}" onclick="toggleScheduleDay('${k}','${encodeURIComponent(d.name)}')">${completed?'✓ Estudado':'Marcar como estudado'}</button></div>`}).join(''):'<div class="calendar-free">—</div>'}</div></div>`;
+            }).join('');
+            $('weeklySchedule').innerHTML=`<div class="study-calendar">${header}<div class="calendar-grid-row">${weekCells}</div></div>`;
+            const monthStart=monthSchedule[0]?.date||new Date();
+            const first=monthStart.getDay();
+            const monthCells=[];
+            for(let i=0;i<first;i++)monthCells.push('<div class="month-cell outside"></div>');
+            monthSchedule.forEach(item=>{
+              const k=dateKey(item.date),isToday=k===today;
+              monthCells.push(`<div class="month-cell ${item.date.getDay()===0||item.date.getDay()===6?'weekend':''} ${isToday?'today':''}"><div class="month-date"><strong>${item.date.getDate()}</strong>${isToday?'<span class="month-today">HOJE</span>':''}</div>${item.slots.map(d=>{const done=!!db.schedule.completed[`${k}|${d.name}`];return `<div class="month-study ${done?'done':''}" style="--subject-color:${d.color}"><div class="month-study-name">${esc(d.name)}</div><div class="month-study-info">${done?'Concluído':'Planejado'}</div><button class="calendar-study-action ${done?'done-action':''}" onclick="toggleScheduleDay('${k}','${encodeURIComponent(d.name)}')">${done?'✓ Estudado':'Marcar'}</button></div>`}).join('')||'<div class="month-empty">—</div>'}</div>`);
+            while(monthCells.length%7)monthCells.push('<div class="month-cell outside"></div>');
+            const monthName=monthStart.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+            $('monthlySchedule').innerHTML=`<div class="month-calendar"><div class="calendar-month-bar"><div class="calendar-month-title">${monthName}</div><div class="calendar-month-range">${fmtDate(dateKey(monthStart))} → ${fmtDate(dateKey(monthSchedule[monthSchedule.length-1]?.date||monthStart))}</div></div><div class="month-head-row">${dow.map(x=>`<div class="month-head">${x}</div>`).join('')}</div><div class="month-grid">${monthCells.join('')}</div></div>`;
+          }'''
+
+          text = text[:start] + replacement + text[end:]
+          path.write_text(text, encoding='utf-8')
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "fix: show only current week and emphasize today"
+          git push
