@@ -1,239 +1,91 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>PRF Juca Study Tracker</title>
-
-    <!-- Fonte -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/cards.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/responsive.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRF JUCA • Study Tracker</title>
+<style>
+:root{--bg:#050814;--panel:#0b1222;--panel2:#101b30;--line:#243958;--txt:#eef8ff;--muted:#8da3c0;--cyan:#00e5ff;--blue:#2878ff;--purple:#a855f7;--green:#00f5a0;--yellow:#ffe45b;--red:#ff4d6d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#06334a 0,transparent 28%),radial-gradient(circle at 90% 8%,#29104f 0,transparent 25%),var(--bg);color:var(--txt);font:14px Arial,Segoe UI,sans-serif}.app{min-height:100vh;display:flex}.side{width:240px;position:fixed;inset:0 auto 0 0;background:#050b18;border-right:1px solid #15506a;padding:18px 13px;z-index:10}.brand{font-size:23px;font-weight:900;padding:10px;border-bottom:1px solid var(--line);margin-bottom:15px}.brand span{color:var(--cyan)}.brand small{font-size:10px;color:#7890ad}.nav{display:grid;gap:7px}.nav button{border:1px solid transparent;background:#0a1426;color:#c5d6eb;padding:12px;border-radius:10px;text-align:left;font-weight:800;cursor:pointer}.nav button:hover,.nav button.active{background:#12385f;color:#fff;border-color:var(--cyan);box-shadow:0 0 18px #00e5ff25}.main{margin-left:240px;width:calc(100% - 240px);padding:24px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.top h1{margin:0;font-size:30px}.top p{margin:5px 0;color:var(--muted)}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid #466887;background:#173c62;color:#fff;border-radius:10px;padding:9px 13px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:5px}.btn:hover{filter:brightness(1.2);box-shadow:0 0 18px #00e5ff35}.primary{background:linear-gradient(135deg,#00b9d4,#2878ff);border-color:var(--cyan)}.yellow{background:linear-gradient(135deg,#ffe45b,#ff9e42);color:#07101b;border-color:#ffe45b}.danger{background:#a52345;border-color:#ff7891}.ghost{background:#1a2d48}.view{display:none}.view.active{display:block}.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1.1fr .9fr}.card{background:linear-gradient(145deg,#0c1527f5,#08111ff5);border:1px solid #203957;border-radius:17px;padding:18px;box-shadow:0 15px 40px #0006}.card h2{margin:0;font-size:18px}.muted{color:var(--muted)}.metric{font-size:29px;font-weight:950;margin-top:5px}.section{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.field{display:grid;gap:6px}.field label{font-size:12px;font-weight:850;color:#b7c9de}.field input,.field select,.field textarea{width:100%;background:#07101e;border:1px solid #2b4867;color:#fff;border-radius:9px;padding:10px;outline:0}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #00e5ff20}.field textarea{min-height:90px;resize:vertical}.form{display:grid;gap:12px}.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row{display:flex;gap:8px;align-items:center}.progress{height:9px;background:#07111f;border:1px solid #263f5b;border-radius:99px;overflow:hidden}.progress i,.progress-fill{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#00b9d4,#2878ff)}.chart{min-height:170px;display:flex;align-items:end;gap:8px;padding:12px 4px;border-bottom:1px solid #27435f}.bar{flex:1;background:linear-gradient(180deg,#00e5ff,#2878ff);border-radius:6px 6px 0 0;min-height:3px;position:relative}.bar span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:9px;color:#8da3c0;white-space:nowrap}.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:9px;border-bottom:1px solid #203957;text-align:left;vertical-align:top}.empty{padding:20px;text-align:center;color:#6f87a2;border:1px dashed #2a4562;border-radius:10px}.pill{display:inline-flex;padding:4px 8px;border-radius:99px;background:#132941;color:#9dc1e5;font-size:10px;font-weight:900}.pill.ok{background:#00f5a014;color:#00f5a0}.pill.warn{background:#ffe45b14;color:#ffe45b}.clock{font-size:78px;font-weight:950;text-align:center;letter-spacing:2px;color:var(--cyan);text-shadow:0 0 28px #00e5ff55;margin:14px 0}.timer-buttons{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.notice{padding:12px;border:1px solid #4d4a24;background:#14130b;border-radius:10px;color:#d9cf9d;line-height:1.5}.toast{position:fixed;right:18px;bottom:18px;max-width:380px;background:#0c1b2c;border:1px solid var(--cyan);border-radius:12px;padding:13px 15px;box-shadow:0 20px 50px #0009;opacity:0;transform:translateY(15px);transition:.2s;z-index:99}.toast.show{opacity:1;transform:none}
+@media(max-width:950px){.g4{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.side{width:205px}.main{margin-left:205px;width:calc(100% - 205px)}}@media(max-width:650px){.app{display:block}.side{position:static;width:100%}.main{margin:0;width:100%;padding:14px}.g4,.g3,.fg2{grid-template-columns:1fr}.top{flex-direction:column;align-items:flex-start}.clock{font-size:48px}}
+.mini-cal{width:86px;height:78px;margin:0 auto;font-size:6px;box-sizing:border-box}.mini-cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:0;text-align:center;color:var(--muted);font-weight:900;margin-bottom:1px}.mini-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0}.mini-cal-day{height:11px;box-sizing:border-box;border:1px solid transparent;border-radius:1px;background:#081321;color:#d9e8f7;display:flex;align-items:center;justify-content:center;font-weight:800}.mini-cal-day.muted{color:#40536c;background:#07101a}.mini-cal-day.today{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 6px #00e5ff25}.mini-cal-day.exam{background:linear-gradient(135deg,#00b9d4,#2878ff);border-color:var(--cyan);color:#fff;box-shadow:0 0 8px #00e5ff55}.mini-cal-day.today.exam{background:linear-gradient(135deg,#ffe45b,#ff4d42);color:#07101b;border-color:#ffe45b}.mini-cal-title{text-align:center;font-weight:950;color:#eef8ff;font-size:7px;margin-bottom:1px;text-transform:capitalize}
+@media(max-width:700px){.mini-cal{width:180px}}
+.view-toggle{display:flex;gap:5px;padding:3px;border:1px solid #29455f;border-radius:9px;background:#07111f}.view-toggle .btn{margin:0}.view-toggle .btn.active{background:linear-gradient(135deg,#00b9d4,#2878ff);border-color:#00e5ff;color:#fff}.monthly-schedule{width:100%;margin-top:14px;overflow-x:auto;padding-bottom:6px}.month-calendar{width:100%;min-width:920px;border:1px solid #314c68;border-radius:12px;overflow:hidden;background:#07111f;box-shadow:0 14px 35px rgba(0,0,0,.25)}.month-head-row,.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}.month-head{height:42px;border-right:1px solid #355675;border-bottom:1px solid #355675;background:#0b1b2d;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:950;letter-spacing:1px}.month-head:last-child{border-right:0}.month-cell{min-height:150px;border-right:1px solid #29425d;border-bottom:1px solid #29425d;background:#081624;padding:7px;position:relative}.month-cell:nth-child(7n){border-right:0}.month-cell.weekend{background:#091827}.month-cell.outside{background:#06101b;opacity:.45}.month-cell.today{background:#0b2032;box-shadow:inset 0 4px 0 #00e5ff}.month-date{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}.month-date strong{font-size:16px;font-weight:950}.month-date small{font-size:8px;color:#6f8aa4;text-transform:uppercase}.month-cell.today .month-date strong{color:#00e5ff}.month-today{font-size:7px;color:#00e5ff;border:1px solid #00e5ff66;padding:2px 4px;border-radius:3px;font-weight:900}.month-study{border-left:3px solid var(--subject-color);background:#10253a;border-radius:5px;padding:6px;margin-top:5px}.month-study.carryover{background:#2a2413;border-left-color:#ffe45b}.month-study.done{background:#0d2a25;border-left-color:#00f5a0}.month-study-name{font-size:9px;font-weight:950;line-height:1.2;overflow-wrap:anywhere}.month-study-info{font-size:7px;color:#8ca5bc;margin-top:3px}.month-study.done .month-study-name{text-decoration:line-through;text-decoration-color:#00f5a066}.month-study button{width:100%;margin-top:4px;padding:4px 3px;font-size:7px;border-radius:4px}.month-empty{color:#2d4760;text-align:center;padding-top:35px;font-size:13px}@media(max-width:1050px){.month-calendar{min-width:900px}.month-cell{min-height:140px}}@media(max-width:700px){.monthly-schedule{overflow-x:auto}.month-calendar{min-width:840px}.view-toggle{width:100%}.view-toggle .btn{flex:1}}
+.weekly-schedule{width:100%;margin-top:14px;overflow-x:auto;padding-bottom:6px}.study-calendar{width:100%;min-width:980px;border:1px solid #314c68;border-radius:12px;overflow:hidden;background:#07111f;box-shadow:0 14px 35px rgba(0,0,0,.25)}.calendar-month-bar{height:58px;background:linear-gradient(180deg,#10283f,#0d2034);border-bottom:2px solid #355675;display:flex;align-items:center;justify-content:space-between;padding:0 18px}.calendar-month-title{font-size:20px;font-weight:950;letter-spacing:.4px;text-transform:capitalize;color:#f5fbff}.calendar-month-range{font-size:12px;font-weight:800;color:#7f9bb5}.calendar-head-row,.calendar-grid-row{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}.calendar-head-row{background:#0b1b2d;border-bottom:1px solid #355675}.calendar-week-header{height:48px;border-right:1px solid #355675;display:flex;align-items:center;justify-content:center;gap:7px;text-align:center}.calendar-week-header:last-child{border-right:0}.calendar-week-header span{font-size:11px;font-weight:950;letter-spacing:1px;color:#dcecff}.calendar-week-header small{font-size:9px;color:#69839d}.calendar-week-header.weekend{background:#0a1929}.calendar-grid-row{min-height:270px;background:#06101d}.calendar-cell{height:270px;border-right:1px solid #355675;background:#081624;position:relative;display:flex;flex-direction:column;padding:0}.calendar-cell:last-child{border-right:0}.calendar-cell.weekend{background:#091827}.calendar-cell:hover{background:#0b1d30}.calendar-cell.today{background:#0b2032;box-shadow:inset 0 4px 0 #00e5ff}.calendar-date{height:54px;flex:none;border-bottom:1px solid #29425d;display:flex;align-items:center;justify-content:space-between;padding:0 11px}.calendar-date strong{font-size:24px;line-height:1;color:#f7fbff;font-weight:950}.calendar-date span{font-size:10px;color:#6f8aa4;text-transform:uppercase;font-weight:900}.calendar-date b{font-size:8px;color:#00e5ff;border:1px solid #00e5ff66;padding:3px 5px;border-radius:3px;letter-spacing:.7px}.calendar-cell.today .calendar-date strong{color:#00e5ff}.calendar-cell-content{flex:1;display:flex;align-items:center;justify-content:center;padding:15px 10px}.calendar-study{width:100%;min-height:145px;border:1px solid #29455f;border-left:4px solid var(--subject-color);border-radius:6px;background:linear-gradient(180deg,#10253a,#0d1e31);padding:16px 9px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(0,0,0,.18)}.calendar-study-title{font-size:14px;font-weight:950;line-height:1.28;color:#fff;text-align:center;overflow-wrap:anywhere}.calendar-study-time{font-size:13px;font-weight:950;color:#00e5ff;margin-top:7px}.calendar-study-meta{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:9px;font-size:9px;color:#8196aa}.calendar-study-meta span:first-child{color:var(--subject-color);font-weight:900;text-transform:uppercase}.calendar-study-status{font-size:8px;font-weight:950;letter-spacing:.6px;color:#8ca5bc;margin-bottom:7px}.calendar-study.carryover{border-color:#ffe45b66;background:linear-gradient(180deg,#2a2413,#161a20)}.calendar-study.carryover .calendar-study-status{color:#ffe45b}.calendar-study.done{border-color:#00f5a066;background:linear-gradient(180deg,#0d2a25,#0d1e31)}.calendar-study.done .calendar-study-status{color:#00f5a0}.calendar-study-action{margin-top:12px;width:100%;border:1px solid #3e6687;background:#173c62;color:#fff;border-radius:6px;padding:7px 5px;font-size:9px;font-weight:950;cursor:pointer}.calendar-study-action:hover{filter:brightness(1.15)}.calendar-study-action.done-action{border-color:#00f5a066;background:#0d2a25;color:#00f5a0}.calendar-study.done .calendar-study-title{text-decoration:line-through;text-decoration-thickness:1px;text-decoration-color:#00f5a066}.calendar-free{color:#2d4760;font-size:18px}@media(max-width:1050px){.study-calendar{min-width:900px}.calendar-cell{height:255px}.calendar-study-title{font-size:12px}}@media(max-width:700px){.weekly-schedule{overflow-x:auto}.study-calendar{min-width:840px}.calendar-month-title{font-size:17px}}
+.autobackup-box{display:grid;gap:10px}.autobackup-status{padding:10px 12px;border-radius:9px;background:#071525;border:1px solid #29455f;font-size:12px}.autobackup-status.on{border-color:#00f5a066;color:#00f5a0}.autobackup-status.off{border-color:#ffe45b55;color:#ffe45b}.autobackup-status.error{border-color:#ff4d6d66;color:#ff7890}.autobackup-actions{display:flex;gap:8px;flex-wrap:wrap}.cloud-status{padding:10px 12px;border-radius:9px;background:#071525;border:1px solid #29455f;font-size:12px}.cloud-status.on{border-color:#00f5a066;color:#00f5a0}.cloud-status.off{border-color:#ffe45b55;color:#ffe45b}.cloud-status.error{border-color:#ff4d6d66;color:#ff7890}.cloud-login{position:fixed;inset:0;background:rgba(2,7,18,.88);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}.cloud-login.hidden{display:none!important}.cloud-login .box{width:min(430px,100%);background:linear-gradient(145deg,#0c1527,#08111f);border:1px solid #00e5ff;border-radius:18px;padding:24px;box-shadow:0 25px 80px #000c}.cloud-login h2{margin:0 0 8px}.cloud-login p{color:#9fb2c9;font-size:13px;line-height:1.5}.cloud-login input{margin-top:8px}.cloud-login button{width:100%;margin-top:12px}.cloud-login .err{color:#ff7890;font-size:12px;min-height:18px;margin-top:8px}.cloud-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:99px;font-size:11px;font-weight:900;background:#00f5a014;color:#00f5a0;border:1px solid #00f5a033}
+</style>
 </head>
-
 <body>
-
-    <aside class="sidebar">
-
-        <div class="logo">
-
-            <div class="logo-icon">
-                📘
-            </div>
-
-            <div class="logo-text">
-                <h2>PRF JUCA</h2>
-                <span>Study Tracker</span>
-            </div>
-
-        </div>
-
-        <nav>
-
-            <ul>
-
-                <li class="active">
-                    🏠
-                    <span>Dashboard</span>
-                </li>
-
-                <li>
-                    📅
-                    <span>Agenda</span>
-                </li>
-
-                <li>
-                    📖
-                    <span>Planejamento</span>
-                </li>
-
-                <li>
-                    📚
-                    <span>Edital</span>
-                </li>
-
-                <li>
-                    📝
-                    <span>Questões</span>
-                </li>
-
-                <li>
-                    🎯
-                    <span>Simulados</span>
-                </li>
-
-                <li>
-                    📈
-                    <span>Estatísticas</span>
-                </li>
-
-                <li>
-                    ⚙️
-                    <span>Configurações</span>
-                </li>
-
-            </ul>
-
-        </nav>
-
-    </aside>
-
-    <main class="content">
-
-        <header class="header">
-
-            <div>
-
-                <h1>Boa noite, Carlos 👋</h1>
-
-                <p>
-                    Continue firme. Cada hora estudada aproxima você da aprovação.
-                </p>
-
-            </div>
-
-            <div class="profile">
-
-                <div class="notification">
-
-                    🔔
-
-                </div>
-
-                <div class="avatar">
-
-                    C
-
-                </div>
-
-            </div>
-
-        </header>
-
-        <section class="today-card">
-
-            <h2>📌 Prioridade de Hoje</h2>
-
-            <p>
-                Matemática • Funções + 30 Questões
-            </p>
-
-        </section>
-
-        <section class="stats-grid">
-
-            <div class="stat-card">
-
-                <span>Hoje</span>
-
-                <h2>0h 00m</h2>
-
-            </div>
-
-            <div class="stat-card">
-
-                <span>Semana</span>
-
-                <h2>0h 00m</h2>
-
-            </div>
-
-            <div class="stat-card">
-
-                <span>Mês</span>
-
-                <h2>0h 00m</h2>
-
-            </div>
-
-            <div class="stat-card">
-
-                <span>Questões</span>
-
-                <h2>0</h2>
-
-            </div>
-
-        </section>
-
-        <section class="dashboard-grid">
-
-            <div class="panel">
-
-                <h3>🎯 Meta diária</h3>
-
-                <div class="progress">
-
-                    <div class="progress-fill" style="width:40%"></div>
-
-                </div>
-
-                <strong>40%</strong>
-
-            </div>
-
-            <div class="panel">
-
-                <h3>📚 Progresso do Edital</h3>
-
-                <div class="progress">
-
-                    <div class="progress-fill blue" style="width:22%"></div>
-
-                </div>
-
-                <strong>22%</strong>
-
-            </div>
-
-            <div class="panel">
-
-                <h3>⏱ Cronômetro</h3>
-
-                <div class="timer">
-
-                    00:00:00
-
-                </div>
-
-                <button class="btn-primary">
-
-                    Iniciar
-
-                </button>
-
-            </div>
-
-            <div class="panel">
-
-                <h3>📈 Últimos 7 dias</h3>
-
-                <div class="chart-placeholder">
-
-                    Gráfico será adicionado na v0.2.2
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-    <script src="js/app.js"></script>
-    <script src="js/dashboard.js"></script>
-
-</body>
-
-</html>
+<div id="cloudLogin" class="cloud-login hidden"><div class="box"><h2>☁️ PRF JUCA • Sincronização</h2><p>Entre para carregar e salvar seus dados na nuvem. Assim, o mesmo banco será usado no computador, notebook e celular.</p><div class="field"><label>Senha de acesso</label><input id="cloudPassword" type="password" autocomplete="current-password" placeholder="Digite sua senha"></div><button class="btn primary" id="cloudLoginBtn">🔐 Entrar e sincronizar</button><div class="err" id="cloudLoginError"></div></div></div>
+<div class="app"><aside class="side"><div class="brand">📘 <span>PRF JUCA</span><br><small>STUDY TRACKER</small></div><div class="nav"><button class="active" data-view="dashboard">📊 Dashboard</button><button data-view="timer">⏱ Cronômetro</button><button data-view="cronograma">📅 Cronograma</button><button data-view="aulas">📚 Aulas</button><button data-view="questoes">🎯 Questões</button><button data-view="simulados">📝 Simulados</button><button data-view="historico">📋 Histórico</button><button data-view="disciplinas">📚 Disciplinas</button><button data-view="edital">📖 Edital</button><button data-view="config">⚙ Configurações</button></div></aside><main class="main">
+<header class="top"><div><h1>PRF JUCA • Study Tracker</h1><p>Controle seus estudos, cronograma e desempenho.</p></div><div class="actions"><span id="cloudBadge" class="cloud-badge" style="display:none">● NUVEM</span><button class="btn ghost" id="openCloudLogin">☁️ Sincronização</button></div></header>
+<section id="dashboard" class="view active"><div class="grid g4"><div class="card"><span class="muted">Hoje</span><div id="dashToday" class="metric">0h 00m</div></div><div class="card"><span class="muted">Semana</span><div id="dashWeek" class="metric">0h 00m</div></div><div class="card"><span class="muted">Mês</span><div id="dashMonth" class="metric">0h 00m</div></div><div class="card"><span class="muted">Questões</span><div id="dashQuestions" class="metric">0</div></div></div><div class="grid g2" style="margin-top:16px"><div class="card"><div class="section"><h2>⏱ Tempo por dia</h2><span class="muted">últimos 7 dias</span></div><div id="dayChart" class="chart"></div></div><div class="card"><div class="section"><h2>⚡ Horas por disciplina</h2></div><div id="dashboardDisciplineList"></div></div></div><div class="card" style="margin-top:16px"><div class="section"><h2>📚 Progresso por disciplina</h2><span class="muted">Edital</span></div><div id="dashboardSyllabus"></div></div></section>
+<section id="timer" class="view"><div class="card"><div class="section"><div><h2>⏱ Cronômetro de estudo</h2><div class="muted">Registre sessões sem tempo mínimo.</div></div><button class="btn yellow" id="openSeparateTimer">↗ Abrir cronômetro em janela separada</button></div><div id="clock" class="clock">00:00:00</div><div class="timer-buttons"><button class="btn primary" id="startTimer">▶ Iniciar</button><button class="btn ghost" id="pauseTimer">Ⅱ Pausar</button><button class="btn danger" id="resetTimer">↻ Zerar</button></div><div class="form" style="margin-top:18px"><div class="fg2"><div class="field"><label>Disciplina</label><select id="sessionSubject" required><option value="">Selecione a disciplina cadastrada</option></select></div><div class="field"><label>Data</label><input id="sessionDate" type="date" required></div></div><div class="field"><label>Conteúdo estudado</label><textarea id="sessionContent" placeholder="O que você estudou?"></textarea></div><div class="fg2"><div class="field"><label>Tempo registrado (min)</label><input id="sessionMinutes" type="number" min="0" value="0"></div><div class="field"><label>Tipo</label><select id="sessionType"><option>Teoria</option><option>Revisão</option><option>Questões</option><option>Lei seca</option><option>Vídeo-aula</option></select></div></div><button class="btn yellow" id="registerTimerSession">💾 Registrar tempo desta sessão</button></div></div><div class="card" style="margin-top:16px"><div class="section"><h2>Sessões registradas</h2></div><div id="sessionList"></div></div></section>
+<section id="cronograma" class="view"><div class="card"><div class="section"><div><h2>📅 Cronograma de estudos</h2><div class="muted">A agenda é criada automaticamente com base nas disciplinas cadastradas, nos pesos e na quantidade de disciplinas escolhidas por dia.</div></div><div class="view-toggle"><button class="btn active" id="weeklyMode">Semanal</button><button class="btn" id="monthlyMode">Mensal</button></div></div><div class="fg2"><div class="field"><label>Horas semanais</label><input id="scheduleHours" type="number" min="1" value="10"></div><div class="field"><label>Disciplinas por dia</label><select id="schedulePerDay"><option value="1">1 disciplina por dia</option><option value="2">2 disciplinas por dia</option></select></div></div><button class="btn yellow" id="saveScheduleSettings" style="margin-top:10px">💾 Atualizar cronograma</button><div id="cronogramaModePill" class="pill warn" style="margin-top:12px">1 disciplina/dia</div><div id="weeklySchedule" class="weekly-schedule"></div><div id="monthlySchedule" class="monthly-schedule" style="display:none"></div></div></section>
+<section id="aulas" class="view"><div class="grid g2"><div class="card"><div class="section"><h2>Registrar aula</h2></div><form id="lessonForm" class="form"><div class="fg2"><div class="field"><label>Data</label><input id="lessonDate" type="date" required></div><div class="field"><label>Disciplina</label><select id="lessonSubject" required><option value="">Selecione a disciplina</option></select></div></div><div class="field"><label>Aula / tópico</label><input id="lessonTitle" required></div><div class="field"><label>Conteúdo estudado</label><textarea id="lessonContent" required></textarea></div><div class="fg2"><div class="field"><label>Duração (min)</label><input id="lessonMinutes" type="number" min="0" value="60"></div><div class="field"><label>Status</label><select id="lessonStatus"><option>Concluída</option><option>Em andamento</option><option>Revisar</option></select></div></div><button class="btn yellow" id="lessonSubmit" type="submit">💾 Registrar aula</button></form></div><div class="card"><div class="section"><h2>Aulas salvas</h2></div><div id="lessonList"></div></div></div></section>
+<section id="questoes" class="view"><div class="grid g2"><div class="card"><div class="section"><h2>Registrar questões</h2></div><form id="questionForm" class="form"><div class="fg2"><div class="field"><label>Data</label><input id="questionDate" type="date" required></div><div class="field"><label>Disciplina</label><select id="questionSubject" required><option value="">Selecione a disciplina</option></select></div></div><div class="fg2"><div class="field"><label>Questões feitas</label><input id="questionTotal" type="number" min="1" required></div><div class="field"><label>Acertos</label><input id="questionCorrect" type="number" min="0" required></div></div><div class="fg2"><div class="field"><label>Banca</label><input id="questionBank"></div><div class="field"><label>Assunto</label><input id="questionTopic"></div></div><div class="field"><label>Observações</label><textarea id="questionNotes"></textarea></div><button class="btn yellow" id="questionSubmit" type="submit">💾 Registrar questões</button></form></div><div class="card"><div class="section"><h2>Desempenho</h2></div><div id="questionStats"></div></div></div><div class="card" style="margin-top:16px"><div class="section"><h2>📈 Evolução das questões</h2></div><div id="questionChart" class="chart"></div></div><div class="card" style="margin-top:16px"><div class="section"><h2>Histórico</h2></div><div id="questionTable"></div></div></section>
+<section id="simulados" class="view"><div class="grid g2"><div class="card"><div class="section"><h2>Registrar simulado</h2></div><form id="simuladoForm" class="form"><div class="fg2"><div class="field"><label>Data</label><input id="simuladoDate" type="date" required></div><div class="field"><label>Nome</label><input id="simuladoName" required placeholder="Ex.: Simulado UNEB"></div></div><div class="fg2"><div class="field"><label>Total</label><input id="simuladoTotal" type="number" min="1" required></div><div class="field"><label>Acertos</label><input id="simuladoCorrect" type="number" min="0" required></div></div><div class="field"><label>Observações</label><textarea id="simuladoNotes"></textarea></div><button class="btn yellow" type="submit">💾 Salvar simulado</button></form></div><div class="card"><div class="section"><h2>Simulados salvos</h2></div><div id="simuladoList"></div></div></div></section>
+<section id="historico" class="view"><div class="card"><div class="section"><h2>📋 Histórico completo</h2></div><div id="historyTable"></div></div></section>
+<section id="disciplinas" class="view"><div class="grid g2"><div class="card"><div class="section"><h2>📚 Cadastrar disciplina</h2></div><form id="disciplineForm" class="form"><div class="field"><label>Nome da disciplina</label><input id="disciplineName" required placeholder="Ex.: Direito Penal Militar"></div><div class="field"><label>Cor da disciplina</label><div class="row"><input id="disciplineColor" type="color" value="#00e5ff" style="width:65px;height:42px;padding:3px"><input id="disciplineColorText" value="#00E5FF" maxlength="7" pattern="^#[0-9A-Fa-f]{6}$" style="flex:1"></div></div><button class="btn yellow" type="submit" id="disciplineSubmit">💾 Cadastrar disciplina</button></form></div><div class="card"><div class="section"><h2>🎨 Disciplinas cadastradas</h2></div><div id="disciplineList"></div></div></div></section>
+<section id="edital" class="view"><div class="grid g2"><div class="card"><div class="section"><h2>📖 Cadastrar tópico do edital</h2></div><form id="syllabusForm" class="form"><div class="field"><label>Disciplina</label><select id="syllabusDiscipline" required><option value="">Selecione a disciplina</option></select></div><div class="field"><label>Tópico</label><input id="syllabusTopic" required></div><div class="field"><label>Observações</label><textarea id="syllabusNotes"></textarea></div><button class="btn yellow" type="submit">💾 Salvar tópico</button></form></div><div class="card"><div class="section"><h2>Progresso do edital</h2></div><div id="syllabusList"></div></div></div></section>
+<section id="config" class="view"><div class="grid g2"><div class="card"><div class="section"><h2>☁️ Sincronização na nuvem</h2><span class="cloud-badge">● ONLINE</span></div><div id="cloudStatus" class="cloud-status off">⚪ Aguardando configuração da nuvem.</div><div class="autobackup-actions" style="margin-top:10px"><button class="btn ghost" id="cloudSyncNow">☁️ Sincronizar agora</button><button class="btn danger" id="cloudLogout">Sair da nuvem</button></div><div class="notice" style="margin-top:14px"><b>Banco principal:</b> seus registros passam a ser armazenados online. O localStorage continua como cache local e o backup externo continua preservado.</div></div><div class="card"><div class="section"><h2>💾 Backup local</h2></div><div id="backupStatus" class="autobackup-status off">Backup automático local disponível.</div><div class="autobackup-actions"><button class="btn ghost" id="chooseBackup">📁 Escolher arquivo de backup</button><button class="btn yellow" id="backupNow">💾 Fazer backup agora</button></div></div></div></section>
+</main></div><div id="toast" class="toast"></div>
+<script>
+const DB_VERSION=3,KEY='prfJucaDB',BACKUP_KEY='prfJucaDB_backup';
+const $=id=>document.getElementById(id),today=new Date().toISOString().slice(0,10);let db=loadDB(),editState={sessions:null,lessons:null,questions:null,simulados:null,syllabus:null};
+let cloudAuthenticated=false,cloudRevision=0,cloudSyncing=false,cloudPending=false,timerSeconds=0,timerInterval=null,timerRunning=false,timerStartedAt=null;
+function emptyDB(){return{version:DB_VERSION,sessions:[],lessons:[],questions:[],simulados:[],disciplines:[],syllabus:[],goals:{hours:10,questions:200,examDate:''},schedule:{hours:10,perDay:1,completed:{}}}}
+function normalizeDB(d){if(!d||typeof d!=='object')return emptyDB();d={...emptyDB(),...d};['sessions','lessons','questions','simulados','disciplines','syllabus'].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});if(!d.goals||typeof d.goals!=='object')d.goals=emptyDB().goals;if(!d.schedule||typeof d.schedule!=='object')d.schedule=emptyDB().schedule;if(!d.schedule.completed||typeof d.schedule.completed!=='object')d.schedule.completed={};d.disciplines.forEach(x=>{x.weight=Math.max(1,Math.min(10,Number(x.weight)||1));if(!x.color)x.color='#00e5ff';if(x.active===undefined)x.active=true});d.version=DB_VERSION;return d}
+function loadDB(){try{const raw=localStorage.getItem(KEY);if(raw)return normalizeDB(JSON.parse(raw));const backup=localStorage.getItem(BACKUP_KEY);if(backup)return normalizeDB(JSON.parse(backup))}catch{}return emptyDB()}
+function saveLocal(){localStorage.setItem(KEY,JSON.stringify(db));localStorage.setItem(BACKUP_KEY,JSON.stringify(db))}
+function uid(){return crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function fmtMin(m){m=Number(m)||0;return `${Math.floor(m/60)}h ${String(Math.round(m%60)).padStart(2,'0')}m`}
+function fmtDate(s){if(!s)return '—';const [y,m,d]=s.split('-');return `${d}/${m}/${y}`}
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2600)}
+async function cloudRequest(url,options={}){const r=await fetch(url,{credentials:'include',headers:{'Content-Type':'application/json',...(options.headers||{})},...options});let j={};try{j=await r.json()}catch{}if(!r.ok){const e=new Error(j.message||`HTTP ${r.status}`);e.status=r.status;e.data=j;throw e}return j}
+async function checkCloud(){try{const x=await cloudRequest('/api/auth');cloudAuthenticated=!!x.authenticated;if(x.authenticated){$('cloudLogin').classList.add('hidden');$('cloudBadge').style.display='inline-flex';setCloudStatus('on','🟢 Nuvem conectada.');await pullCloud()}else{setCloudStatus(x.configured?'off':'error',x.configured?'🟡 Faça login para sincronizar.':'🔴 Nuvem não configurada na Vercel.')}}catch(e){setCloudStatus('error','🔴 API da nuvem indisponível.');}}
+function setCloudStatus(c,t){$('cloudStatus').className='cloud-status '+c;$('cloudStatus').textContent=t}
+async function loginCloud(){const p=$('cloudPassword').value;try{const x=await cloudRequest('/api/auth',{method:'POST',body:JSON.stringify({action:'login',password:p})});if(x.authenticated){cloudAuthenticated=true;$('cloudLogin').classList.add('hidden');$('cloudPassword').value='';$('cloudLoginError').textContent='';$('cloudBadge').style.display='inline-flex';setCloudStatus('on','🟢 Nuvem conectada. Carregando seus dados...');await pullCloud();toast('Sincronização ativada.')}}catch(e){$('cloudLoginError').textContent=e.message||'Não foi possível entrar.'}}
+async function pullCloud(){if(!cloudAuthenticated)return;cloudSyncing=true;try{const x=await cloudRequest('/api/data');if(x.db){db=normalizeDB(x.db);cloudRevision=Number(x.revision)||0;saveLocal();renderAll()}else{await pushCloud(true)}setCloudStatus('on',`🟢 Nuvem conectada • revisão ${cloudRevision}`)}catch(e){setCloudStatus('error','🔴 Erro ao carregar a nuvem.');console.error(e)}finally{cloudSyncing=false}}
+async function pushCloud(force=false){if(!cloudAuthenticated||cloudSyncing)return false;cloudSyncing=true;cloudPending=true;try{const x=await cloudRequest('/api/data',{method:'PUT',body:JSON.stringify({db,baseRevision:force?0:cloudRevision})});cloudRevision=Number(x.revision)||cloudRevision+1;setCloudStatus('on',`🟢 Sincronizado • revisão ${cloudRevision}`);return true}catch(e){if(e.status===409&&e.data){db=normalizeDB(e.data.db);cloudRevision=Number(e.data.revision)||cloudRevision;saveLocal();renderAll();toast('Havia uma versão mais recente na nuvem. Ela foi carregada.')}else{setCloudStatus('error','🔴 Falha ao salvar na nuvem.');console.error(e)}return false}finally{cloudPending=false;cloudSyncing=false}}
+async function persist(message='Dados salvos.'){saveLocal();renderAll();if(cloudAuthenticated)await pushCloud();if(message)toast(message)}
+$('openCloudLogin').onclick=()=>{$('cloudLogin').classList.remove('hidden');$('cloudPassword').focus()};$('cloudLoginBtn').onclick=loginCloud;$('cloudPassword').addEventListener('keydown',e=>{if(e.key==='Enter')loginCloud()});$('cloudSyncNow').onclick=async()=>{if(!cloudAuthenticated){$('cloudLogin').classList.remove('hidden');return}await pushCloud();toast('Sincronização concluída.')};$('cloudLogout').onclick=async()=>{try{await cloudRequest('/api/auth',{method:'POST',body:JSON.stringify({action:'logout'})})}catch{}cloudAuthenticated=false;$('cloudBadge').style.display='none';setCloudStatus('off','🟡 Desconectado da nuvem.');toast('Sessão encerrada.')};
+function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(v).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));renderAll()}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
+function fillSubjects(){const ids=['sessionSubject','lessonSubject','questionSubject'];ids.forEach(id=>{const s=$(id),old=s.value;s.innerHTML='<option value="">Selecione a disciplina cadastrada</option>'+(db.disciplines||[]).filter(d=>d.active!==false).map(d=>`<option value="${esc(d.name)}">${esc(d.name)}</option>`).join('');if([...s.options].some(o=>o.value===old))s.value=old});$('syllabusDiscipline').innerHTML='<option value="">Selecione a disciplina</option>'+(db.disciplines||[]).filter(d=>d.active!==false).map(d=>`<option value="${esc(d.name)}">${esc(d.name)}</option>`).join('')}
+function totalStudy(){return [...db.sessions,...db.lessons].reduce((a,x)=>a+Number(x.minutes||0),0)}
+function renderDashboard(){const t=new Date();const k=t.toISOString().slice(0,10);const month=k.slice(0,7);let day=0,week=0,mon=0;const d0=new Date(t);d0.setHours(0,0,0,0);const wd=d0.getDay();d0.setDate(d0.getDate()+(wd===0?-6:1-wd));const wk=d0.toISOString().slice(0,10);[...db.sessions,...db.lessons].forEach(x=>{const m=Number(x.minutes||0);if(x.date===k)day+=m;if(x.date>=wk)week+=m;if(x.date?.startsWith(month))mon+=m});$('dashToday').textContent=fmtMin(day);$('dashWeek').textContent=fmtMin(week);$('dashMonth').textContent=fmtMin(mon);$('dashQuestions').textContent=db.questions.reduce((a,x)=>a+Number(x.total||0),0);let days=[];for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);let q=d.toISOString().slice(0,10),v=[...db.sessions,...db.lessons].filter(x=>x.date===q).reduce((a,x)=>a+Number(x.minutes||0),0);days.push({label:q.slice(8,10)+'/'+q.slice(5,7),value:v})}const max=Math.max(1,...days.map(x=>x.value));$('dayChart').innerHTML=days.map(x=>`<div class="bar" style="height:${Math.max(3,x.value/max*90)}%"><span>${fmtMin(x.value)}</span></div>`).join('');let dm={};[...db.sessions,...db.lessons].forEach(x=>{let n=x.subject||'Sem disciplina';dm[n]=(dm[n]||0)+Number(x.minutes||0)});let names=(db.disciplines||[]).map(d=>({name:d.name,color:d.color||'#00e5ff',acc:dm[d.name]||0}));let known=new Set(names.map(x=>x.name.toLowerCase()));Object.keys(dm).forEach(n=>{if(!known.has(n.toLowerCase()))names.push({name:n,color:'#718096',acc:dm[n]})});names.sort((a,b)=>b.acc-a.acc);const maxD=Math.max(1,...names.map(x=>x.acc));$('dashboardDisciplineList').innerHTML=names.length?names.map(d=>`<div style="margin:12px 0;padding-bottom:10px;border-bottom:1px solid var(--line)"><div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;background:${d.color};display:inline-block"></span><b>${esc(d.name)}</b></div><div class="muted" style="font-size:11px;margin:7px 0">⏱ ${fmtMin(d.acc)}</div><div class="progress"><i style="width:${d.acc?Math.max(2,d.acc/maxD*100):0}%;background:${d.color}"></i></div></div>`).join(''):'<div class="empty">Registre aulas ou sessões para visualizar.</div>';const groups={};db.syllabus.forEach(x=>(groups[x.discipline]??=[]).push(x));$('dashboardSyllabus').innerHTML=Object.keys(groups).length?Object.entries(groups).map(([n,a])=>{const done=a.filter(x=>x.completed).length;const pct=Math.round(done/a.length*100);return `<div style="margin:12px 0"><div class="section" style="margin:0"><b>${esc(n)}</b><span class="muted">${done}/${a.length} • ${pct}%</span></div><div class="progress"><i style="width:${pct}%"></i></div></div>`}).join(''):'<div class="empty">Cadastre tópicos no Edital para acompanhar o progresso.</div>'}
+function updateClock(){const s=timerSeconds;const h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;$('clock').textContent=[h,m,sec].map(x=>String(x).padStart(2,'0')).join(':');$('sessionMinutes').value=Math.floor(s/60)}
+$('startTimer').onclick=()=>{if(timerRunning)return;timerRunning=true;timerStartedAt=Date.now()-timerSeconds*1000;timerInterval=setInterval(()=>{timerSeconds=Math.floor((Date.now()-timerStartedAt)/1000);updateClock()},1000)};$('pauseTimer').onclick=()=>{if(!timerRunning)return;timerRunning=false;clearInterval(timerInterval);timerInterval=null;timerSeconds=Math.floor((Date.now()-timerStartedAt)/1000);updateClock()};$('resetTimer').onclick=()=>{timerRunning=false;clearInterval(timerInterval);timerInterval=null;timerSeconds=0;timerStartedAt=null;updateClock()};
+async function registerSession(){const subject=$('sessionSubject').value.trim();if(!subject){alert('Selecione uma disciplina cadastrada.');return}const minutes=Math.max(0,Number($('sessionMinutes').value)||0);db.sessions.unshift({id:uid(),date:$('sessionDate').value||today,subject,content:$('sessionContent').value.trim()||'Sessão de estudo',minutes,type:$('sessionType').value});await persist('Sessão registrada.');$('sessionContent').value='';$('sessionMinutes').value=0;$('resetTimer').click()}
+$('registerTimerSession').onclick=registerSession;$('openSeparateTimer').onclick=()=>window.open(location.href+'#timer','prf-juca-timer','width=560,height=820,resizable=yes');
+function renderSessions(){$('sessionList').innerHTML=db.sessions.length?db.sessions.map(x=>`<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div class="section" style="margin:0"><b>${esc(x.subject)}</b><span><button class="btn ghost" onclick="editRecord('sessions','${x.id}')">✏️ Editar</button><button class="btn danger" onclick="removeRecord('sessions','${x.id}')">🗑️ Excluir</button></span></div><div class="muted">${fmtDate(x.date)} • ${x.minutes} min • ${esc(x.type)}</div><div>${esc(x.content)}</div></div>`).join(''):'<div class="empty">Nenhuma sessão.</div>'}
+function editRecord(type,id){const x=db[type].find(v=>v.id===id);if(!x)return;if(type==='sessions'){showView('timer');$('sessionDate').value=x.date;$('sessionSubject').value=x.subject;$('sessionContent').value=x.content;$('sessionMinutes').value=x.minutes;$('sessionType').value=x.type;editState.sessions=id;$('registerTimerSession').textContent='✏️ Atualizar sessão'}else if(type==='lessons'){showView('aulas');$('lessonDate').value=x.date;$('lessonSubject').value=x.subject;$('lessonTitle').value=x.title;$('lessonContent').value=x.content;$('lessonMinutes').value=x.minutes;$('lessonStatus').value=x.status;editState.lessons=id;$('lessonSubmit').textContent='✏️ Atualizar aula'}else if(type==='questions'){showView('questoes');$('questionDate').value=x.date;$('questionSubject').value=x.subject;$('questionTotal').value=x.total;$('questionCorrect').value=x.correct;$('questionBank').value=x.bank||'';$('questionTopic').value=x.topic||'';$('questionNotes').value=x.notes||'';editState.questions=id}else if(type==='simulados'){showView('simulados');$('simuladoDate').value=x.date;$('simuladoName').value=x.name;$('simuladoTotal').value=x.total;$('simuladoCorrect').value=x.correct;$('simuladoNotes').value=x.notes||'';editState.simulados=id}}
+function removeRecord(type,id){if(!confirm('Excluir este registro?'))return;db[type]=db[type].filter(x=>x.id!==id);persist('Registro excluído.')}
+$('sessionDate').value=today;
+$('lessonDate').value=today;$('questionDate').value=today;$('simuladoDate').value=today;
+$('lessonForm').addEventListener('submit',async e=>{e.preventDefault();const x={date:$('lessonDate').value,subject:$('lessonSubject').value,title:$('lessonTitle').value,content:$('lessonContent').value,minutes:Number($('lessonMinutes').value)||0,status:$('lessonStatus').value};if(editState.lessons){Object.assign(db.lessons.find(v=>v.id===editState.lessons),x);editState.lessons=null;$('lessonSubmit').textContent='💾 Registrar aula'}else db.lessons.unshift({id:uid(),...x});e.target.reset();$('lessonDate').value=today;await persist('Aula salva.')});
+$('questionForm').addEventListener('submit',async e=>{e.preventDefault();const x={date:$('questionDate').value,subject:$('questionSubject').value,total:Number($('questionTotal').value)||0,correct:Number($('questionCorrect').value)||0,bank:$('questionBank').value,topic:$('questionTopic').value,notes:$('questionNotes').value};if(x.correct>x.total){alert('Acertos não podem superar o total.');return}if(editState.questions){Object.assign(db.questions.find(v=>v.id===editState.questions),x);editState.questions=null}else db.questions.unshift({id:uid(),...x});e.target.reset();$('questionDate').value=today;await persist('Questões salvas.')});
+$('simuladoForm').addEventListener('submit',async e=>{e.preventDefault();const x={date:$('simuladoDate').value,name:$('simuladoName').value,total:Number($('simuladoTotal').value)||0,correct:Number($('simuladoCorrect').value)||0,notes:$('simuladoNotes').value};if(editState.simulados){Object.assign(db.simulados.find(v=>v.id===editState.simulados),x);editState.simulados=null}else db.simulados.unshift({id:uid(),...x});e.target.reset();$('simuladoDate').value=today;await persist('Simulado salvo.')});
+function renderLessons(){$('lessonList').innerHTML=db.lessons.length?db.lessons.map(x=>`<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div class="section" style="margin:0"><b>${esc(x.subject)} • ${esc(x.title)}</b><span><button class="btn ghost" onclick="editRecord('lessons','${x.id}')">✏️</button><button class="btn danger" onclick="removeRecord('lessons','${x.id}')">🗑️</button></span></div><div class="muted">${fmtDate(x.date)} • ${x.minutes} min • ${esc(x.status)}</div><div>${esc(x.content)}</div></div>`).join(''):'<div class="empty">Nenhuma aula.</div>'}
+function renderQuestions(){const total=db.questions.reduce((a,x)=>a+Number(x.total||0),0),correct=db.questions.reduce((a,x)=>a+Number(x.correct||0),0);$('questionStats').innerHTML=`<div class="grid g3"><div><span class="muted">Total</span><div class="metric">${total}</div></div><div><span class="muted">Acertos</span><div class="metric">${correct}</div></div><div><span class="muted">Aproveitamento</span><div class="metric">${total?Math.round(correct/total*100):0}%</div></div></div>`;$('questionChart').innerHTML=db.questions.slice(0,12).reverse().map(x=>{const pct=x.total?x.correct/x.total*100:0;return `<div class="bar" style="height:${Math.max(3,pct)}%"><span>${Math.round(pct)}%</span></div>`}).join('')||'<div class="empty" style="width:100%">Registre questões para visualizar.</div>';$('questionTable').innerHTML=db.questions.length?`<div class="tablewrap"><table class="table"><tr><th>Data</th><th>Disciplina</th><th>Total</th><th>Acertos</th><th>Banca</th><th>Ação</th></tr>${db.questions.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.subject)}</td><td>${x.total}</td><td>${x.correct}</td><td>${esc(x.bank||'—')}</td><td><button class="btn ghost" onclick="editRecord('questions','${x.id}')">✏️</button><button class="btn danger" onclick="removeRecord('questions','${x.id}')">🗑️</button></td></tr>`).join('')}</table></div>`:'<div class="empty">Nenhum registro.</div>'}
+function renderSimulados(){$('simuladoList').innerHTML=db.simulados.length?db.simulados.map(x=>`<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div class="section" style="margin:0"><b>${esc(x.name)}</b><span><button class="btn ghost" onclick="editRecord('simulados','${x.id}')">✏️</button><button class="btn danger" onclick="removeRecord('simulados','${x.id}')">🗑️</button></span></div><div class="muted">${fmtDate(x.date)} • ${x.correct}/${x.total} • ${x.total?Math.round(x.correct/x.total*100):0}%</div><div>${esc(x.notes||'')}</div></div>`).join(''):'<div class="empty">Nenhum simulado.</div>'}
+function renderHistory(){let r=[...db.sessions.map(x=>({...x,kind:'Sessão',target:'sessions',desc:x.content})),...db.lessons.map(x=>({...x,kind:'Aula',target:'lessons',desc:x.title})),...db.questions.map(x=>({...x,kind:'Questões',target:'questions',desc:`${x.correct}/${x.total} ${x.topic||''}`})),...db.simulados.map(x=>({...x,kind:'Simulado',target:'simulados',desc:x.name}))].sort((a,b)=>b.date.localeCompare(a.date));$('historyTable').innerHTML=r.length?`<div class="tablewrap"><table class="table"><tr><th>Data</th><th>Tipo</th><th>Disciplina</th><th>Registro</th><th>Ação</th></tr>${r.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${x.kind}</td><td>${esc(x.subject||'—')}</td><td>${esc(x.desc)}</td><td><button class="btn ghost" onclick="editRecord('${x.target}','${x.id}')">✏️</button><button class="btn danger" onclick="removeRecord('${x.target}','${x.id}')">🗑️</button></td></tr>`).join('')}</table></div>`:'<div class="empty">Nenhum registro.</div>'}
+function normalizeDisciplineName(s){return String(s||'').trim().replace(/\s+/g,' ')}
+function renderDisciplines(){fillSubjects();$('disciplineList').innerHTML=db.disciplines.length?db.disciplines.map(d=>`<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div class="section" style="margin:0"><div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:50%;background:${d.color};display:inline-block"></span><div><b>${esc(d.name)}</b><div class="muted" style="font-size:10px">${d.color.toUpperCase()} • ${d.active===false?'Oculta':'Ativa'} • peso ${d.weight}</div></div></div><span><button class="btn ghost" onclick="editDiscipline('${d.id}')">✏️ Editar</button><button class="btn ghost" onclick="toggleDiscipline('${d.id}')">${d.active===false?'Ativar':'Ocultar'}</button><button class="btn danger" onclick="deleteDiscipline('${d.id}')">🗑️ Excluir</button></span></div></div>`).join(''):'<div class="empty">Nenhuma disciplina cadastrada.</div>'}
+function editDiscipline(id){const d=db.disciplines.find(x=>x.id===id);if(!d)return;$('disciplineName').value=d.name;$('disciplineColor').value=d.color;$('disciplineColorText').value=d.color.toUpperCase();$('disciplineForm').dataset.editId=id;$('disciplineSubmit').textContent='✏️ Atualizar disciplina';showView('disciplinas')}
+function toggleDiscipline(id){const d=db.disciplines.find(x=>x.id===id);if(!d)return;d.active=d.active===false;persist('Disciplina atualizada.')}
+function deleteDiscipline(id){const d=db.disciplines.find(x=>x.id===id);if(!d)return;if(!confirm(`Excluir a disciplina "${d.name}"? Os registros serão preservados.`))return;db.disciplines=db.disciplines.filter(x=>x.id!==id);persist('Disciplina excluída.')}
+$('disciplineForm').addEventListener('submit',e=>{e.preventDefault();const name=normalizeDisciplineName($('disciplineName').value),color=$('disciplineColorText').value.trim();if(!name)return;if(!/^#[0-9A-Fa-f]{6}$/.test(color)){alert('Informe uma cor hexadecimal válida.');return}const editId=$('disciplineForm').dataset.editId;if(db.disciplines.some(d=>d.name.toLowerCase()===name.toLowerCase()&&d.id!==editId)){alert('Essa disciplina já está cadastrada.');return}if(editId){Object.assign(db.disciplines.find(d=>d.id===editId),{name,color:color.toUpperCase()});delete $('disciplineForm').dataset.editId}else db.disciplines.push({id:uid(),name,color:color.toUpperCase(),active:true,weight:1});$('disciplineForm').reset();$('disciplineColor').value='#00e5ff';$('disciplineColorText').value='#00E5FF';$('disciplineSubmit').textContent='💾 Cadastrar disciplina';persist('Disciplina salva.')});$('disciplineColor').addEventListener('input',e=>$('disciplineColorText').value=e.target.value.toUpperCase());$('disciplineColorText').addEventListener('input',e=>{if(/^#[0-9A-Fa-f]{6}$/.test(e.target.value))$('disciplineColor').value=e.target.value});
+function renderSyllabus(){const groups={};db.syllabus.forEach(x=>(groups[x.discipline]??=[]).push(x));$('syllabusList').innerHTML=Object.keys(groups).length?Object.entries(groups).map(([name,items])=>{const color=(db.disciplines.find(d=>d.name===name)||{}).color||'#00e5ff';return `<div style="margin-bottom:18px"><div class="section" style="margin:0"><b style="color:${color}">${esc(name)}</b><span class="muted">${items.filter(x=>x.completed).length}/${items.length}</span></div>${items.map(x=>`<div style="display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)"><input type="checkbox" ${x.completed?'checked':''} onchange="toggleSyllabus('${x.id}')"><span style="flex:1;${x.completed?'text-decoration:line-through;color:#789':''}">${esc(x.topic)}</span><button class="btn danger" onclick="removeSyllabus('${x.id}')">🗑️</button></div>`).join('')}</div>`}).join(''):'<div class="empty">Cadastre tópicos no Edital.</div>'}
+$('syllabusForm').addEventListener('submit',e=>{e.preventDefault();const discipline=$('syllabusDiscipline').value,topic=$('syllabusTopic').value.trim(),notes=$('syllabusNotes').value.trim();if(!discipline||!topic){alert('Selecione a disciplina e informe o tópico.');return}db.syllabus.push({id:uid(),discipline,topic,notes,completed:false});e.target.reset();persist('Tópico salvo.')});function toggleSyllabus(id){const x=db.syllabus.find(v=>v.id===id);if(!x)return;x.completed=!x.completed;persist('Progresso atualizado.')};function removeSyllabus(id){db.syllabus=db.syllabus.filter(x=>x.id!==id);persist('Tópico removido.')}
+function getScheduleDisciplines(){return db.disciplines.filter(d=>d.active!==false)}function dateKey(d){return d.toISOString().slice(0,10)}function seededHash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)}
+function buildSchedule(monthOffset=0){const now=new Date();const month=new Date(now.getFullYear(),now.getMonth()+monthOffset,1);const year=month.getFullYear(),mo=month.getMonth(),days=[];const last=new Date(year,mo+1,0).getDate();for(let i=1;i<=last;i++)days.push(new Date(year,mo,i));const disciplines=getScheduleDisciplines();const perDay=Math.max(1,Number(db.schedule.perDay)||1);const totalSlots=days.length*perDay;if(!disciplines.length)return days.map(date=>({date,slots:[]}));const counts=Object.fromEntries(disciplines.map(d=>[d.name,1]));const remaining=Math.max(0,totalSlots-disciplines.length);const weightSum=disciplines.reduce((a,d)=>a+(Number(d.weight)||1),0);const extras=Object.fromEntries(disciplines.map(d=>[d.name,Math.floor(remaining*(Number(d.weight)||1)/weightSum)]));let used=disciplines.reduce((a,d)=>a+extras[d.name],0);let rem=remaining-used;disciplines.slice().sort((a,b)=>seededHash(a.name)-seededHash(b.name)).forEach(d=>{if(rem>0){extras[d.name]++;rem--}});disciplines.forEach(d=>counts[d.name]+=extras[d.name]);const remainingCount={...counts};const result=[];let idx=0;for(const date of days){const slots=[];const usedNames=new Set();for(let n=0;n<perDay;n++){let candidates=disciplines.filter(d=>remainingCount[d.name]>0&&!usedNames.has(d.name)).sort((a,b)=>remainingCount[b.name]-remainingCount[a.name]||seededHash(a.name+dateKey(date)+idx)-seededHash(b.name+dateKey(date)+idx));if(!candidates.length)candidates=disciplines.filter(d=>remainingCount[d.name]>0);if(!candidates.length)break;const d=candidates[0];remainingCount[d.name]--;usedNames.add(d.name);slots.push(d)}result.push({date,slots});idx++}return result}
+function renderSchedule(){const perDay=Math.max(1,Number(db.schedule.perDay)||1);$('cronogramaModePill').textContent=`${perDay} disciplina${perDay>1?'s':''}/dia`;const schedule=buildSchedule(0),start=schedule[0]?.date||new Date(),end=schedule[schedule.length-1]?.date||start;const dow=['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];const monthName=start.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});let header=`<div class="calendar-month-bar"><div class="calendar-month-title">${monthName}</div><div class="calendar-month-range">${fmtDate(dateKey(start))} → ${fmtDate(dateKey(end))}</div></div><div class="calendar-head-row">${dow.map((x,i)=>`<div class="calendar-week-header ${i===0||i===6?'weekend':''}"><span>${x}</span></div>`).join('')}</div>`;const first=(start.getDay());const cells=[];for(let i=0;i<first;i++)cells.push('<div class="calendar-cell outside"></div>');schedule.forEach(item=>{const k=dateKey(item.date),isToday=k===today;cells.push(`<div class="calendar-cell ${item.date.getDay()===0||item.date.getDay()===6?'weekend':''} ${isToday?'today':''}"><div class="calendar-date"><strong>${item.date.getDate()}</strong><span>${dow[item.date.getDay()]}</span>${isToday?'<b>HOJE</b>':''}</div><div class="calendar-cell-content">${item.slots.length?item.slots.map(d=>{const completed=!!db.schedule.completed[`${k}|${d.name}`];return `<div class="calendar-study ${completed?'done':''}" style="--subject-color:${d.color||'#00e5ff'}"><div class="calendar-study-status">${completed?'CONCLUÍDO':'ESTUDO'}</div><div class="calendar-study-title">${esc(d.name)}</div><div class="calendar-study-time">${fmtMin(Math.max(1,Math.round((Number(db.schedule.hours)||10)*60/(schedule.length*perDay))))}</div><div class="calendar-study-meta"><span>${esc(d.name)}</span></div><button class="calendar-study-action ${completed?'done-action':''}" onclick="toggleScheduleDay('${k}','${encodeURIComponent(d.name)}')">${completed?'✓ Estudado':'Marcar como estudado'}</button></div>`}).join(''):'<div class="calendar-free">—</div>'}</div></div>`)});while(cells.length%7)cells.push('<div class="calendar-cell outside"></div>');$('weeklySchedule').innerHTML=`<div class="study-calendar">${header}<div class="calendar-grid-row">${cells.join('')}</div></div>`;$('monthlySchedule').innerHTML=`<div class="month-calendar"><div class="month-head-row">${dow.map(x=>`<div class="month-head">${x}</div>`).join('')}</div><div class="month-grid">${schedule.map(item=>`<div class="month-cell ${item.date.getDay()===0||item.date.getDay()===6?'weekend':''} ${dateKey(item.date)===today?'today':''}"><div class="month-date"><strong>${item.date.getDate()}</strong></div>${item.slots.map(d=>{const done=!!db.schedule.completed[`${dateKey(item.date)}|${d.name}`];return `<div class="month-study ${done?'done':''}" style="--subject-color:${d.color}"><div class="month-study-name">${esc(d.name)}</div><div class="month-study-info">${done?'Concluído':'Planejado'}</div><button class="calendar-study-action ${done?'done-action':''}" onclick="toggleScheduleDay('${dateKey(item.date)}','${encodeURIComponent(d.name)}')">${done?'✓ Estudado':'Marcar'}</button></div>`}).join('')||'<div class="month-empty">—</div>'}</div>`).join('')}</div></div>`}
+function toggleScheduleDay(date,nameEncoded){const name=decodeURIComponent(nameEncoded),key=`${date}|${name}`;db.schedule.completed[key]=!db.schedule.completed[key];persist(db.schedule.completed[key]?'Dia marcado como estudado.':'Marcação removida.')}
+$('saveScheduleSettings').onclick=()=>{db.schedule.hours=Math.max(1,Number($('scheduleHours').value)||10);db.schedule.perDay=Math.max(1,Number($('schedulePerDay').value)||1);persist('Cronograma atualizado.')};$('weeklyMode').onclick=()=>{$('weeklyMode').classList.add('active');$('monthlyMode').classList.remove('active');$('weeklySchedule').style.display='block';$('monthlySchedule').style.display='none'};$('monthlyMode').onclick=()=>{$('monthlyMode').classList.add('active');$('weeklyMode').classList.remove('active');$('weeklySchedule').style.display='none';$('monthlySchedule').style.display='block'};
+function renderAll(){renderDashboard();renderSessions();renderLessons();renderQuestions();renderSimulados();renderHistory();renderDisciplines();renderSyllabus();$('scheduleHours').value=db.schedule.hours||10;$('schedulePerDay').value=db.schedule.perDay||1;renderSchedule()}
+$('chooseBackup').onclick=()=>{const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.onchange=async()=>{const f=input.files[0];if(!f)return;try{const d=normalizeDB(JSON.parse(await f.text()));db=d;await persist('Backup restaurado.')}catch{alert('Arquivo de backup inválido.')}};input.click()};$('backupNow').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download=`prf-juca-backup-${today}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('Backup baixado.')};
+renderAll();updateClock();checkCloud();
+</script></body></html>
