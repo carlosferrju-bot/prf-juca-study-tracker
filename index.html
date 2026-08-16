@@ -1,239 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>PRF Juca Study Tracker</title>
-
-    <!-- Fonte -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/cards.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/responsive.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRF JUCA • Study Tracker</title>
+<style>
+:root{--bg:#050814;--panel:#0b1222;--panel2:#101b30;--line:#243958;--txt:#eef8ff;--muted:#8da3c0;--cyan:#00e5ff;--blue:#2878ff;--purple:#a855f7;--green:#00f5a0;--yellow:#ffe45b;--red:#ff4d6d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#06334a 0,transparent 28%),radial-gradient(circle at 90% 8%,#29104f 0,transparent 25%),var(--bg);color:var(--txt);font:14px Arial,Segoe UI,sans-serif}.app{min-height:100vh;display:flex}.side{width:240px;position:fixed;inset:0 auto 0 0;background:#050b18;border-right:1px solid #15506a;padding:18px 13px;z-index:10}.brand{font-size:23px;font-weight:900;padding:10px;border-bottom:1px solid var(--line);margin-bottom:15px}.brand span{color:var(--cyan)}.brand small{font-size:10px;color:#7890ad}.nav{display:grid;gap:7px}.nav button{border:1px solid transparent;background:transparent;color:#b8cbe3;padding:11px;border-radius:9px;text-align:left;cursor:pointer}.nav button:hover,.nav button.active{background:#0c2036;color:#fff;border-color:#15506a}.main{margin-left:240px;width:calc(100% - 240px);padding:24px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.title{font-size:28px;font-weight:900}.sub{color:var(--muted);margin-top:5px}.card{background:linear-gradient(180deg,#0c1729,#081120);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 8px 28px #0005}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat b{font-size:24px;display:block;margin-top:8px}.muted{color:var(--muted)}button{font:inherit}.btn{border:1px solid #31547b;background:#11243c;color:#fff;padding:10px 14px;border-radius:9px;cursor:pointer}.btn.primary{background:linear-gradient(90deg,#007d9d,#2878ff);border:0}.danger{color:#ff7b92}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.input,select,textarea{background:#07111f;color:#fff;border:1px solid #294362;border-radius:8px;padding:9px}.hidden{display:none!important}.modal{position:fixed;inset:0;background:#0009;display:grid;place-items:center;z-index:50}.modal>div{width:min(700px,92vw);max-height:88vh;overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:9px;border-bottom:1px solid #1e314b;text-align:left}.pill{padding:4px 8px;border-radius:999px;background:#112d4a}.timer{font-size:52px;font-weight:900;letter-spacing:2px}.toast{position:fixed;right:18px;bottom:18px;background:#0e2238;border:1px solid #2c557e;padding:12px 16px;border-radius:10px;z-index:100}.small{font-size:12px}@media(max-width:900px){.side{position:relative;width:100%;height:auto}.main{margin-left:0;width:100%}.app{display:block}.grid{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
-
 <body>
-
-    <aside class="sidebar">
-
-        <div class="logo">
-
-            <div class="logo-icon">
-                📘
-            </div>
-
-            <div class="logo-text">
-                <h2>PRF JUCA</h2>
-                <span>Study Tracker</span>
-            </div>
-
-        </div>
-
-        <nav>
-
-            <ul>
-
-                <li class="active">
-                    🏠
-                    <span>Dashboard</span>
-                </li>
-
-                <li>
-                    📅
-                    <span>Agenda</span>
-                </li>
-
-                <li>
-                    📖
-                    <span>Planejamento</span>
-                </li>
-
-                <li>
-                    📚
-                    <span>Edital</span>
-                </li>
-
-                <li>
-                    📝
-                    <span>Questões</span>
-                </li>
-
-                <li>
-                    🎯
-                    <span>Simulados</span>
-                </li>
-
-                <li>
-                    📈
-                    <span>Estatísticas</span>
-                </li>
-
-                <li>
-                    ⚙️
-                    <span>Configurações</span>
-                </li>
-
-            </ul>
-
-        </nav>
-
-    </aside>
-
-    <main class="content">
-
-        <header class="header">
-
-            <div>
-
-                <h1>Boa noite, Carlos 👋</h1>
-
-                <p>
-                    Continue firme. Cada hora estudada aproxima você da aprovação.
-                </p>
-
-            </div>
-
-            <div class="profile">
-
-                <div class="notification">
-
-                    🔔
-
-                </div>
-
-                <div class="avatar">
-
-                    C
-
-                </div>
-
-            </div>
-
-        </header>
-
-        <section class="today-card">
-
-            <h2>📌 Prioridade de Hoje</h2>
-
-            <p>
-                Matemática • Funções + 30 Questões
-            </p>
-
-        </section>
-
-        <section class="stats-grid">
-
-            <div class="stat-card">
-
-                <span>Hoje</span>
-
-                <h2>0h 00m</h2>
-
-            </div>
-
-            <div class="stat-card">
-
-                <span>Semana</span>
-
-                <h2>0h 00m</h2>
-
-            </div>
-
-            <div class="stat-card">
-
-                <span>Mês</span>
-
-                <h2>0h 00m</h2>
-
-            </div>
-
-            <div class="stat-card">
-
-                <span>Questões</span>
-
-                <h2>0</h2>
-
-            </div>
-
-        </section>
-
-        <section class="dashboard-grid">
-
-            <div class="panel">
-
-                <h3>🎯 Meta diária</h3>
-
-                <div class="progress">
-
-                    <div class="progress-fill" style="width:40%"></div>
-
-                </div>
-
-                <strong>40%</strong>
-
-            </div>
-
-            <div class="panel">
-
-                <h3>📚 Progresso do Edital</h3>
-
-                <div class="progress">
-
-                    <div class="progress-fill blue" style="width:22%"></div>
-
-                </div>
-
-                <strong>22%</strong>
-
-            </div>
-
-            <div class="panel">
-
-                <h3>⏱ Cronômetro</h3>
-
-                <div class="timer">
-
-                    00:00:00
-
-                </div>
-
-                <button class="btn-primary">
-
-                    Iniciar
-
-                </button>
-
-            </div>
-
-            <div class="panel">
-
-                <h3>📈 Últimos 7 dias</h3>
-
-                <div class="chart-placeholder">
-
-                    Gráfico será adicionado na v0.2.2
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-    <script src="js/app.js"></script>
-    <script src="js/dashboard.js"></script>
-
-</body>
-
-</html>
+<div id="app"></div>
+<script>
+const KEY='prf_juca_db';
+const defaultDB={revision:0,disciplines:[],sessions:[],schedule:{},settings:{},updatedAt:0};
+let db=loadLocal();let timer={running:false,start:0,elapsed:0,discipline:''};
+function loadLocal(){try{return {...defaultDB,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return {...defaultDB}}}
+function saveLocal(){localStorage.setItem(KEY,JSON.stringify(db))}
+async function cloud(method='GET',body=null){const opt={method,headers:{'Content-Type':'application/json'}};if(body)opt.body=JSON.stringify(body);const r=await fetch('/api/data',opt);if(!r.ok)throw new Error('Falha na sincronização');return r.json()}
+async function sync(){try{const x=await cloud('GET');if(x&&x.data){db=x.data;saveLocal();render()}}catch(e){console.warn(e)}}
+async function saveCloud(){db.revision=(db.revision||0)+1;db.updatedAt=Date.now();saveLocal();try{await cloud('PUT',db)}catch(e){toast('Salvo localmente; sincronização pendente')}}
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2500)}
+function nav(){return `<aside class="side"><div class="brand">PRF <span>JUCA</span><br><small>STUDY TRACKER</small></div><div class="nav">${['Dashboard','Disciplinas','Cronômetro','Histórico','Configurações'].map(x=>`<button onclick="go('${x}')" class="${location.hash.slice(1)||'Dashboard'}" >${x}</button>`).join('')}</div></aside>`}
+function go(p){location.hash=p;render()}
+function dashboard(){const total=db.sessions.reduce((a,s)=>a+(+s.minutes||0),0);return `<div class="top"><div><div class="title">Boa noite, Carlos 👋</div><div class="sub">Continue firme. Cada hora estudada aproxima você da aprovação.</div></div><button class="btn" onclick="openTimer()">⏱ Abrir cronômetro em janela separada</button></div><div class="grid"><div class="card stat">Hoje<b>${fmt(total)} </b><span class="muted">tempo registrado</span></div><div class="card stat">Semana<b>${fmt(total)}</b><span class="muted">tempo registrado</span></div><div class="card stat">Mês<b>${fmt(total)}</b><span class="muted">tempo registrado</span></div><div class="card stat">Sessões<b>${db.sessions.length}</b><span class="muted">registradas</span></div></div><div class="card"><h2>📚 Disciplinas</h2>${db.disciplines.length?db.disciplines.map(d=>`<span class="pill">${esc(d.name||d)}</span>`).join(' '):'<span class="muted">Nenhuma disciplina cadastrada.</span>'}</div>`}
+function disciplines(){return `<div class="top"><div><div class="title">Disciplinas</div><div class="sub">Cadastre e mantenha suas disciplinas sincronizadas.</div></div><button class="btn primary" onclick="addDisc()">+ Nova disciplina</button></div><div class="card"><table class="table"><thead><tr><th>Disciplina</th><th>Ações</th></tr></thead><tbody>${db.disciplines.map((d,i)=>`<tr><td>${esc(d.name||d)}</td><td><button class="btn danger" onclick="delDisc(${i})">Excluir</button></td></tr>`).join('')||'<tr><td colspan="2" class="muted">Nenhuma disciplina.</td></tr>'}</tbody></table></div>`}
+function timerPage(){return `<div class="title">⏱ Cronômetro</div><div class="card"><div class="timer" id="clock">${clockText()}</div><div class="row"><select id="timerDisc"><option value="">Selecione a disciplina</option>${db.disciplines.map(d=>`<option>${esc(d.name||d)}</option>`).join('')}</select><button class="btn primary" onclick="toggleTimer()">${timer.running?'Parar':'Iniciar'}</button><button class="btn" onclick="registerTimer()">Registrar sessão</button><button class="btn" onclick="openTimer()">Janela separada</button></div><div class="sub">Não há tempo mínimo para registrar.</div></div>`}
+function history(){return `<div class="title">Histórico</div><div class="card"><table class="table"><thead><tr><th>Data</th><th>Disciplina</th><th>Minutos</th><th>Ações</th></tr></thead><tbody>${db.sessions.slice().reverse().map((s,i)=>`<tr><td>${esc(s.date||'')}</td><td>${esc(s.discipline||'')}</td><td>${s.minutes||0}</td><td><button class="btn danger" onclick="delSession(${db.sessions.length-1-i})">Excluir</button></td></tr>`).join('')||'<tr><td colspan="4" class="muted">Nenhuma sessão registrada.</td></tr>'}</tbody></table></div>`}
+function settings(){return `<div class="title">Configurações</div><div class="card"><p>Sincronização automática com a nuvem ativa.</p><button class="btn" onclick="sync()">Sincronizar agora</button></div>`}
+function render(){const p=location.hash.slice(1)||'Dashboard';document.getElementById('app').innerHTML=`<div class="app">${nav()}<main class="main">${p==='Disciplinas'?disciplines():p==='Cronômetro'?timerPage():p==='Histórico'?history():p==='Configurações'?settings():dashboard()}</main></div>`;if(timer.running)setIntervalTick()}
+function fmt(m){m=Math.floor(m||0);return `${Math.floor(m/60)}h ${m%60}m`}
+function clockText(){let sec=Math.floor((timer.elapsed+(timer.running?(Date.now()-timer.start):0))/1000);return [Math.floor(sec/3600),Math.floor(sec/60)%60,sec%60].map(x=>String(x).padStart(2,'0')).join(':')}
+let tick;function setIntervalTick(){clearInterval(tick);tick=setInterval(()=>{const c=document.getElementById('clock');if(c)c.textContent=clockText()},1000)}
+function toggleTimer(){if(!timer.running){timer.discipline=document.getElementById('timerDisc')?.value||'';timer.start=Date.now();timer.running=true;setIntervalTick()}else{timer.elapsed+=Date.now()-timer.start;timer.running=false;clearInterval(tick);render()}}
+async function registerTimer(){let minutes=Math.round((timer.elapsed+(timer.running?(Date.now()-timer.start):0))/60000);let d=document.getElementById('timerDisc')?.value||timer.discipline;if(!d){toast('Selecione uma disciplina');return}db.sessions.push({id:crypto.randomUUID(),date:new Date().toISOString().slice(0,10),discipline:d,minutes});timer={running:false,start:0,elapsed:0,discipline:''};await saveCloud();render();toast('Sessão registrada e sincronizada')}
+function openTimer(){const w=window.open(location.href+'#Cronômetro&separate=1','PRFJUCA_TIMER','width=560,height=720');if(w)toast('Cronômetro aberto em nova janela')}
+async function addDisc(){const n=prompt('Nome da disciplina:');if(!n)return;db.disciplines.push({id:crypto.randomUUID(),name:n.trim()});await saveCloud();render()}
+async function delDisc(i){if(!confirm('Excluir disciplina?'))return;db.disciplines.splice(i,1);await saveCloud();render()}
+async function delSession(i){if(!confirm('Excluir sessão?'))return;db.sessions.splice(i,1);await saveCloud();render()}
+function esc(x){return String(x??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+window.addEventListener('hashchange',render);sync();render();setInterval(sync,30000);
+</script>
+</body></html>
