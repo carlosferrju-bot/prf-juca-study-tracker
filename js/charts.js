@@ -1,1 +1,1 @@
-(()=>{'use strict';const s=document.createElement('script');s.src='js/analytics-v4.js?v=4';s.defer=false;document.head.appendChild(s)})();
+(()=>{'use strict';['js/analytics-v4.js?v=4','js/analytics-range-fix.js?v=4'].forEach(src=>{const s=document.createElement('script');s.src=src;document.head.appendChild(s)})})();
