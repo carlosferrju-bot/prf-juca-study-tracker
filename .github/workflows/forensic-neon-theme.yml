@@ -1,0 +1,49 @@
+name: Apply forensic neon theme
+on:
+  push:
+    branches: [main, master]
+permissions:
+  contents: write
+jobs:
+  theme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply theme
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='/* PRF JUCA FORENSIC NEON THEME v1 */'
+          if marker not in s:
+              css=r'''/* PRF JUCA FORENSIC NEON THEME v1 */
+body{background:#020711 url('forensic-bg.svg') center/cover fixed no-repeat!important;position:relative;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(115deg,rgba(1,7,17,.62),rgba(4,9,25,.24) 42%,rgba(10,4,25,.38)),linear-gradient(180deg,rgba(0,8,20,.18),rgba(0,2,8,.48));pointer-events:none;z-index:-1}
+.app{position:relative;z-index:1}
+.side{background:rgba(2,9,20,.78)!important;backdrop-filter:blur(14px) saturate(135%);-webkit-backdrop-filter:blur(14px) saturate(135%);border-right:1px solid rgba(0,229,255,.28)!important;box-shadow:10px 0 45px rgba(0,0,0,.28),inset -1px 0 rgba(168,85,247,.12)}
+.main{position:relative}
+.top{background:rgba(2,9,20,.28);border:1px solid rgba(0,229,255,.12);border-radius:22px;padding:18px 20px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 18px 55px rgba(0,0,0,.22)}
+.card{background:linear-gradient(145deg,rgba(7,18,35,.72),rgba(5,12,27,.60))!important;border:1px solid rgba(74,164,255,.30)!important;backdrop-filter:blur(12px) saturate(130%);-webkit-backdrop-filter:blur(12px) saturate(130%);box-shadow:0 18px 55px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.035)!important}
+.metric,.card h2,.top h1{ text-shadow:0 2px 18px rgba(0,229,255,.12)}
+.nav button{background:rgba(5,16,32,.64)!important;border-color:rgba(74,164,255,.12)!important;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.nav button:hover,.nav button.active{background:rgba(19,56,95,.70)!important;border-color:rgba(0,229,255,.75)!important;box-shadow:0 0 24px rgba(0,229,255,.18)!important}
+.btn{background:rgba(23,60,98,.68);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.field input,.field select,.field textarea{background:rgba(3,12,25,.68)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.month-calendar,.study-calendar{background:rgba(5,14,28,.66)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.month-cell,.calendar-cell{background:rgba(6,18,31,.48)!important}
+.month-cell.weekend,.calendar-cell.weekend{background:rgba(7,22,37,.52)!important}
+.calendar-study,.month-study{background:rgba(16,37,58,.72)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.toast{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+@media(max-width:650px){body{background-position:center top}.top{border-radius:16px;padding:14px}}
+'''
+              s=s.replace('</style>',css+'</style>',1)
+              p.write_text(s,encoding='utf-8')
+          Path('forensic-bg.svg').write_text(r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#020611"/><stop offset=".45" stop-color="#07182b"/><stop offset="1" stop-color="#100522"/></linearGradient><radialGradient id="c"><stop stop-color="#00e5ff" stop-opacity=".9"/><stop offset="1" stop-color="#00e5ff" stop-opacity="0"/></radialGradient><radialGradient id="p"><stop stop-color="#a855f7" stop-opacity=".8"/><stop offset="1" stop-color="#a855f7" stop-opacity="0"/></radialGradient><filter id="g"><feGaussianBlur stdDeviation="12"/></filter></defs><rect width="1600" height="1000" fill="url(#bg)"/><g opacity=".7"><ellipse cx="350" cy="150" rx="330" ry="180" fill="url(#c)" filter="url(#g)"/><ellipse cx="1250" cy="260" rx="350" ry="200" fill="url(#p)" filter="url(#g)"/><path d="M0 160H1600M0 420H1600M0 720H1600" stroke="#0a9dff" stroke-opacity=".18"/><path d="M220 0V1000M620 0V1000M1040 0V1000M1400 0V1000" stroke="#8b5cf6" stroke-opacity=".16"/></g><g fill="none" stroke="#00d9ff" stroke-width="5" opacity=".7"><circle cx="1280" cy="340" r="115"/><circle cx="1280" cy="340" r="85"/><path d="M1165 340h230M1280 225v230"/><path d="M1330 520c70-50 125-70 180-20s35 120-25 135c-65 16-85-65-35-95s110 0 90 65"/></g><g fill="none" stroke="#a855f7" stroke-width="8" opacity=".55"><path d="M1080 850c40-120 20-220-70-300M1160 850c-20-120-10-210 75-300"/><path d="M1030 600h180M1010 670h220M1000 740h240"/></g><g opacity=".8"><rect x="1210" y="120" width="260" height="155" rx="10" fill="#06101d" stroke="#00e5ff"/><rect x="1230" y="140" width="220" height="115" fill="#061c32" stroke="#2878ff"/><path d="M1250 220c35-90 65 50 100-25s50 35 90-45" stroke="#00e5ff" fill="none" stroke-width="5"/><rect x="250" y="720" width="410" height="120" rx="15" fill="#07101e" stroke="#7c3aed"/><path d="M280 790h350M300 765h80M430 765h90M560 765h90" stroke="#00e5ff" stroke-width="8"/></g><g fill="#00e5ff" opacity=".8"><circle cx="180" cy="210" r="4"/><circle cx="760" cy="180" r="5"/><circle cx="930" cy="460" r="3"/><circle cx="1480" cy="620" r="5"/></g><g stroke="#00e5ff" stroke-opacity=".28" fill="none"><path d="M720 770c0-130 80-190 160-190s160 60 160 190"/><path d="M770 770c0-90 50-135 110-135s110 45 110 135"/></g></svg>''',encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html forensic-bg.svg
+          git diff --cached --quiet || git commit -m "style: apply four-layer futuristic forensic neon theme"
+          git push
