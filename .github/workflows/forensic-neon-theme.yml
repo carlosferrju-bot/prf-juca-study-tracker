@@ -21,10 +21,8 @@ jobs:
               css=r'''/* PRF JUCA FORENSIC INVESTIGATION V2 */
 body{background:#02060d url('forensic-bg.svg') center top/cover fixed no-repeat!important;position:relative;overflow-x:hidden}
 body:before{content:"";position:fixed;inset:0;background:linear-gradient(115deg,rgba(1,6,14,.28),rgba(2,8,18,.10) 45%,rgba(8,3,18,.24)),linear-gradient(180deg,rgba(0,4,10,.08),rgba(0,2,7,.34));pointer-events:none;z-index:-1}
-.app{position:relative;z-index:1}
-.side{background:rgba(2,8,17,.72)!important;backdrop-filter:blur(16px) saturate(125%);-webkit-backdrop-filter:blur(16px) saturate(125%);border-right:1px solid rgba(0,229,255,.30)!important;box-shadow:12px 0 45px rgba(0,0,0,.34),inset -1px 0 rgba(168,85,247,.14)}
-.main{position:relative}
-.top{background:rgba(2,8,17,.22);border:1px solid rgba(0,229,255,.14);border-radius:22px;padding:18px 20px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);box-shadow:0 18px 55px rgba(0,0,0,.20)}
+.app{position:relative;z-index:1}.side{background:rgba(2,8,17,.72)!important;backdrop-filter:blur(16px) saturate(125%);-webkit-backdrop-filter:blur(16px) saturate(125%);border-right:1px solid rgba(0,229,255,.30)!important;box-shadow:12px 0 45px rgba(0,0,0,.34),inset -1px 0 rgba(168,85,247,.14)}
+.main{position:relative}.top{background:rgba(2,8,17,.22);border:1px solid rgba(0,229,255,.14);border-radius:22px;padding:18px 20px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);box-shadow:0 18px 55px rgba(0,0,0,.20)}
 .card{background:linear-gradient(145deg,rgba(5,16,29,.66),rgba(3,10,21,.54))!important;border:1px solid rgba(71,161,222,.34)!important;backdrop-filter:blur(9px) saturate(125%);-webkit-backdrop-filter:blur(9px) saturate(125%);box-shadow:0 18px 55px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.035)!important}
 .metric,.card h2,.top h1{text-shadow:0 2px 18px rgba(0,229,255,.16)}
 .nav button{background:rgba(4,14,28,.62)!important;border-color:rgba(74,164,255,.14)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -32,57 +30,32 @@ body:before{content:"";position:fixed;inset:0;background:linear-gradient(115deg,
 .btn{background:rgba(18,54,86,.68);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
 .field input,.field select,.field textarea{background:rgba(2,10,21,.60)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .month-calendar,.study-calendar{background:rgba(4,13,25,.56)!important;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
-.month-cell,.calendar-cell{background:rgba(5,16,29,.40)!important}
-.month-cell.weekend,.calendar-cell.weekend{background:rgba(7,19,32,.44)!important}
-.calendar-study,.month-study{background:rgba(12,31,48,.66)!important;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
-.toast{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.month-cell,.calendar-cell{background:rgba(5,16,29,.40)!important}.month-cell.weekend,.calendar-cell.weekend{background:rgba(7,19,32,.44)!important}.calendar-study,.month-study{background:rgba(12,31,48,.66)!important;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
 @media(max-width:650px){body{background-position:center top}.top{border-radius:16px;padding:14px}}
 '''
               s=s.replace('</style>',css+'</style>',1)
               p.write_text(s,encoding='utf-8')
-          Path('forensic-bg.svg').write_text(r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice"><defs>
-          <linearGradient id="room" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#05070b"/><stop offset=".42" stop-color="#0a1119"/><stop offset="1" stop-color="#160c20"/></linearGradient>
-          <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#14202b"/><stop offset="1" stop-color="#050a10"/></linearGradient>
-          <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#18212a"/><stop offset="1" stop-color="#03070b"/></linearGradient>
-          <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0c2635" stop-opacity=".9"/><stop offset="1" stop-color="#07101a" stop-opacity=".55"/></linearGradient>
-          <radialGradient id="cyanGlow"><stop stop-color="#00e5ff" stop-opacity=".48"/><stop offset="1" stop-color="#00e5ff" stop-opacity="0"/></radialGradient>
-          <radialGradient id="violetGlow"><stop stop-color="#9b5cff" stop-opacity=".40"/><stop offset="1" stop-color="#9b5cff" stop-opacity="0"/></radialGradient>
-          <filter id="blur20"><feGaussianBlur stdDeviation="20"/></filter><filter id="blur7"><feGaussianBlur stdDeviation="7"/></filter>
-          <filter id="shadow"><feGaussianBlur stdDeviation="10"/></filter>
-        </defs>
-        <rect width="1600" height="1000" fill="url(#room)"/>
-        <rect x="0" y="0" width="1600" height="640" fill="url(#wall)" opacity=".82"/>
-        <ellipse cx="280" cy="210" rx="360" ry="250" fill="url(#cyanGlow)" filter="url(#blur20)"/>
-        <ellipse cx="1330" cy="180" rx="390" ry="270" fill="url(#violetGlow)" filter="url(#blur20)"/>
-        <g opacity=".22" stroke="#8ea8bd" fill="none"><path d="M0 110H1600M0 260H1600M0 410H1600M0 560H1600"/><path d="M180 0V650M520 0V650M890 0V650M1260 0V650M1490 0V650"/></g>
-        <!-- forensic evidence board -->
-        <g transform="translate(870 90)"><rect width="520" height="330" rx="8" fill="#0a1118" stroke="#385268" stroke-width="5"/><rect x="18" y="18" width="484" height="294" rx="4" fill="#151b20" stroke="#243746"/>
-          <path d="M70 82L235 155L430 70M235 155L420 260M235 155L95 260" stroke="#e0a84d" stroke-width="3" opacity=".75"/>
-          <rect x="55" y="48" width="105" height="70" fill="#26323a" stroke="#768996"/><rect x="280" y="48" width="145" height="92" fill="#202b33" stroke="#667985"/><rect x="70" y="205" width="120" height="68" fill="#222d34" stroke="#667985"/>
-          <g fill="#d5e3ea" opacity=".82"><circle cx="106" cy="82" r="21"/><path d="M82 108h48v-22H82z"/></g>
-          <g fill="none" stroke="#00d9ff" stroke-width="3" opacity=".75"><circle cx="352" cy="93" r="30"/><circle cx="352" cy="93" r="18"/><path d="M322 93h60M352 63v60"/></g>
-          <g stroke="#d94b57" stroke-width="3"><path d="M198 46l14 14M212 46l-14 14"/><path d="M442 218l14 14M456 218l-14 14"/></g>
-          <text x="30" y="303" fill="#9bb0bf" font-family="Arial" font-size="13" letter-spacing="3">CASE ANALYSIS / EVIDENCE</text>
-        </g>
-        <!-- monitor -->
-        <g transform="translate(1220 500)"><rect x="0" y="0" width="300" height="180" rx="9" fill="#070d13" stroke="#435b6b" stroke-width="5"/><rect x="15" y="15" width="270" height="150" fill="#071923" stroke="#0bb9d1" stroke-opacity=".55"/>
-          <path d="M35 120C60 72 82 135 108 92S150 125 176 70s50 46 76-12" fill="none" stroke="#00e5ff" stroke-width="4"/><path d="M30 55H270M30 90H270M30 125H270" stroke="#2b5365" stroke-width="1"/><text x="28" y="38" fill="#7cecff" font-family="Arial" font-size="12">FORENSIC ANALYSIS</text><rect x="120" y="180" width="60" height="35" fill="#1c2931"/><path d="M80 215h140" stroke="#6d7f89" stroke-width="8"/></g>
-        <!-- microscope on lab bench -->
-        <g transform="translate(170 470)"><ellipse cx="245" cy="355" rx="270" ry="35" fill="#000" opacity=".45" filter="url(#shadow)"/><path d="M70 330h350v48H70z" fill="url(#desk)" stroke="#263b48"/><path d="M125 330L155 115h58l-10 215z" fill="#26343b"/><path d="M180 130L265 75l35 35-82 78z" fill="#455963"/><path d="M250 82l35-58 34 18-31 66z" fill="#657680"/><path d="M218 182h125v34H218z" fill="#52646e"/><circle cx="310" cy="200" r="25" fill="#0a151c" stroke="#00b9d4" stroke-width="4"/><path d="M130 255h235" stroke="#0b0f12" stroke-width="22"/><rect x="205" y="250" width="80" height="16" rx="4" fill="#0d2029" stroke="#00e5ff" stroke-opacity=".65"/><circle cx="248" cy="268" r="9" fill="#00e5ff" opacity=".55"/>
-          <!-- evidence tray --> <rect x="-5" y="290" width="125" height="50" rx="6" fill="#131d23" stroke="#516572"/><circle cx="25" cy="314" r="12" fill="#e4c38d"/><rect x="52" y="302" width="45" height="24" rx="3" fill="#a6c4ce" opacity=".5"/></g>
-        <!-- fingerprint analysis glass -->
-        <g transform="translate(30 90)" opacity=".72"><circle cx="250" cy="185" r="135" fill="url(#glass)" stroke="#2b6476" stroke-width="2"/><g fill="none" stroke="#65e6ff" stroke-width="3" opacity=".72"><path d="M250 86c-60 0-105 45-105 100 0 45 26 82 68 101"/><path d="M250 108c-47 0-82 35-82 78 0 34 18 63 49 81"/><path d="M250 130c-33 0-59 25-59 57 0 25 13 46 34 60"/><path d="M250 152c-20 0-36 16-36 36 0 15 8 29 21 38"/><path d="M250 86c60 0 105 45 105 100 0 45-26 82-68 101"/><path d="M250 108c47 0 82 35 82 78 0 34-18 63-49 81"/><path d="M250 130c33 0 59 25 59 57 0 25-13 46-34 60"/></g><text x="180" y="350" fill="#6eeaff" font-family="Arial" font-size="13" letter-spacing="4">LATENT PRINT</text></g>
-        <!-- DNA / specimen rack -->
-        <g transform="translate(1370 730)" opacity=".70"><path d="M-45 0C45 50 45 110-45 160M45 0C-45 50-45 110 45 160" fill="none" stroke="#b879ff" stroke-width="7"/><path d="M-34 27h68M-40 57h80M-40 88h80M-34 118h68M-20 148h40" stroke="#64eaff" stroke-width="4"/></g>
-        <!-- evidence markers and scene light -->
-        <g transform="translate(600 700)"><path d="M0 170L55 0l55 170z" fill="#d6a33e" stroke="#f4d070"/><text x="45" y="120" text-anchor="middle" fill="#10151a" font-family="Arial" font-weight="900" font-size="48">4</text></g>
-        <g opacity=".30"><ellipse cx="1300" cy="850" rx="430" ry="100" fill="#00d9ff" filter="url(#blur20)"/><ellipse cx="520" cy="900" rx="420" ry="90" fill="#8d4dff" filter="url(#blur20)"/></g>
-        <!-- subtle cinematic vignette -->
-        <rect width="1600" height="1000" fill="none" stroke="#000" stroke-width="90" opacity=".30"/>
-        </svg>''',encoding='utf-8')
+          # V3 is intentionally unconditional with its own selector specificity.
+          v3=r'''<style id="prf-juca-forensic-v3">
+/* PRF JUCA FORENSIC V3 — immersive lab */
+html,body{background:#02060d!important}
+body{background-image:linear-gradient(90deg,rgba(1,6,13,.18) 0%,rgba(1,6,13,.06) 46%,rgba(5,4,18,.12) 100%),url("assets/forensic-lab-bg.svg?v=3")!important;background-size:cover!important;background-position:center top!important;background-attachment:fixed!important;background-repeat:no-repeat!important}
+.app{background:transparent!important}.main{background:transparent!important}
+.side{background:rgba(2,8,16,.72)!important;backdrop-filter:blur(9px) saturate(120%);-webkit-backdrop-filter:blur(9px) saturate(120%)}
+.top{background:rgba(2,8,16,.16)!important;border-color:rgba(0,229,255,.16)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.card{background:linear-gradient(145deg,rgba(4,13,24,.48),rgba(2,8,16,.34))!important;border-color:rgba(73,151,187,.46)!important;backdrop-filter:blur(4px) saturate(112%);-webkit-backdrop-filter:blur(4px) saturate(112%);box-shadow:0 14px 40px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.035)!important}
+#dashboard>.grid:first-child>.card{background:linear-gradient(145deg,rgba(5,16,28,.58),rgba(2,9,17,.44))!important}
+#dashboard>.grid:nth-child(2)>.card,#dashboardSyllabus{background:linear-gradient(145deg,rgba(4,13,24,.48),rgba(2,8,16,.34))!important}
+.nav button{background:rgba(3,12,22,.64)!important}.nav button.active{background:rgba(13,49,80,.78)!important}
+</style>'''
+          if 'id="prf-juca-forensic-v3"' in s:
+              import re
+              s=re.sub(r'<style id="prf-juca-forensic-v3">.*?</style>','',s,flags=re.S)
+          s=s.replace('</head>',v3+'\n</head>')
+          p.write_text(s,encoding='utf-8')
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html forensic-bg.svg
-          git diff --cached --quiet || git commit -m "style: apply cinematic forensic investigation background"
+          git add index.html
+          git diff --cached --quiet || git commit -m "style: expose cinematic forensic lab through glass UI"
           git push
