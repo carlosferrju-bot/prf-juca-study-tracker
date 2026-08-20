@@ -1,0 +1,1 @@
+(()=>{setTimeout(()=>{const v=document.getElementById('estatisticas');if(v&&!v.dataset.userOpened)v.classList.remove('active')},700)})();
