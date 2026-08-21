@@ -1,9 +1,9 @@
 import crypto from 'node:crypto';
-import { configured, missingConfig, createSession, setSession, clearSession, currentUser, readUsers, writeUsers, hashPassword, verifyPassword, findUserByEmail } from './_auth.js';
+import { configured, missingConfig, createSession, setSession, clearSession, currentUser, readUsers, writeUsers, hashPassword, verifyPassword, findUserByEmail, isAdmin } from './_auth.js';
 
 function publicUser(user) {
   if (!user) return null;
-  return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt };
+  return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt, role: isAdmin(user) ? 'admin' : 'user', active: user.active !== false };
 }
 
 function cleanName(value) {
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
       if (password.length < 6) return res.status(400).json({ ok: false, message: 'A senha deve ter pelo menos 6 caracteres.' });
 
       const users = await readUsers();
-      if (users.some(u => u.email === email)) {
+      if (users.some(u => String(u.email || '').toLowerCase() === email)) {
         return res.status(409).json({ ok: false, code: 'EMAIL_EXISTS', message: 'Este e-mail já possui uma conta. Faça login.' });
       }
 
@@ -59,6 +59,7 @@ export default async function handler(req, res) {
         email,
         passwordHash: hashPassword(password),
         createdAt: new Date().toISOString(),
+        active: true,
         dataPath: users.length === 0 ? 'prf-juca/database.json' : `prf-juca/users/${crypto.randomUUID()}/database.json`
       };
 
@@ -74,6 +75,9 @@ export default async function handler(req, res) {
       const user = await findUserByEmail(email);
       if (!user || !verifyPassword(password, user.passwordHash)) {
         return res.status(401).json({ ok: false, code: 'INVALID_CREDENTIALS', message: 'E-mail ou senha incorretos.' });
+      }
+      if (user.active === false && !isAdmin(user)) {
+        return res.status(403).json({ ok: false, code: 'ACCOUNT_SUSPENDED', message: 'Esta conta está temporariamente restringida pelo administrador.' });
       }
       setSession(res, createSession(user.id));
       return res.status(200).json({ ok: true, authenticated: true, user: publicUser(user) });
