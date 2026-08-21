@@ -4,6 +4,7 @@ import { get, put } from '@vercel/blob';
 const COOKIE = 'prf_juca_session';
 const USERS_PATH = 'prf-juca/users.json';
 const MAX_AGE = 60 * 60 * 24 * 30;
+const ADMIN_EMAIL = 'carlosferrjr@outlook.com.br';
 
 function signingSecret() {
   return process.env.SESSION_SECRET || process.env.BLOB_READ_WRITE_TOKEN || 'prf-juca-development-secret';
@@ -17,6 +18,19 @@ export function missingConfig() {
 
 export function configured() {
   return missingConfig().length === 0;
+}
+
+export function isAdmin(user) {
+  return String(user?.email || '').trim().toLowerCase() === ADMIN_EMAIL;
+}
+
+export function isActive(user) {
+  return user?.active !== false;
+}
+
+export function decorateUser(user) {
+  if (!user) return null;
+  return { ...user, role: isAdmin(user) ? 'admin' : 'user', active: isActive(user) };
 }
 
 function sign(payload) {
@@ -79,7 +93,7 @@ export async function readUsers() {
 }
 
 export async function writeUsers(users) {
-  await put(USERS_PATH, JSON.stringify({ version: 1, users }), {
+  await put(USERS_PATH, JSON.stringify({ version: 2, users }), {
     access: 'private',
     addRandomSuffix: false,
     allowOverwrite: true,
@@ -111,14 +125,16 @@ export async function findUserByEmail(email) {
   const normalized = String(email || '').trim().toLowerCase();
   if (!normalized) return null;
   const users = await readUsers();
-  return users.find(u => u.email === normalized) || null;
+  return users.find(u => String(u.email || '').toLowerCase() === normalized) || null;
 }
 
 export async function currentUser(req) {
   const userId = sessionUserId(req);
   if (!userId) return null;
   const users = await readUsers();
-  return users.find(u => u.id === userId) || null;
+  const user = users.find(u => u.id === userId) || null;
+  if (!user || !isActive(user)) return null;
+  return decorateUser(user);
 }
 
 export async function requireSession(req, res) {
@@ -128,10 +144,11 @@ export async function requireSession(req, res) {
   }
   const user = await currentUser(req);
   if (!user) {
+    clearSession(res);
     res.status(401).json({ ok: false, code: 'UNAUTHORIZED', message: 'Faça login para continuar.' });
     return null;
   }
   return user;
 }
 
-export { USERS_PATH };
+export { USERS_PATH, ADMIN_EMAIL };
