@@ -27,17 +27,23 @@ async function findBlob(path) {
 
 async function readPath(path) {
   const blob = await findBlob(path);
-  if (!blob) return { db: null, revision: 0, updatedAt: null };
+  if (!blob) return { db: null, revision: 0, updatedAt: null, ownerId: null };
   const result = await get(blob.pathname, { access: 'private', token: process.env.BLOB_READ_WRITE_TOKEN });
   if (!result?.stream) throw new Error('Não foi possível ler o banco na Vercel Blob.');
   const text = await new Response(result.stream).text();
   const doc = JSON.parse(text);
-  return { db: normalize(doc.db || doc), revision: Number(doc.revision) || 1, updatedAt: doc.updatedAt || null };
+  return {
+    db: normalize(doc.db || doc),
+    revision: Number(doc.revision) || 1,
+    updatedAt: doc.updatedAt || null,
+    ownerId: doc.ownerId || null
+  };
 }
 
-async function writePath(path, db, revision) {
+async function writePath(path, db, revision, ownerId) {
   const doc = {
-    schema: 2,
+    schema: 3,
+    ownerId,
     revision,
     updatedAt: new Date().toISOString(),
     db: normalize(db)
@@ -58,19 +64,26 @@ export default async function handler(req, res) {
   const user = await requireSession(req, res);
   if (!user) return;
 
+  // Cada usuário possui um caminho de armazenamento próprio.
+  // A primeira conta pode continuar usando o banco legado para preservar seus dados antigos;
+  // todas as demais contas usam o caminho exclusivo criado no cadastro.
   const path = user.dataPath || `prf-juca/users/${user.id}/database.json`;
 
   try {
     if (req.method === 'GET') {
-      let cloud = await readPath(path);
+      const cloud = await readPath(path);
 
-      // A primeira conta preserva automaticamente o banco antigo já existente.
-      if (!cloud.db && path !== LEGACY_PATH) {
-        const legacy = await readPath(LEGACY_PATH);
-        if (legacy.db) {
-          cloud = legacy;
-          await writePath(path, legacy.db, legacy.revision || 1);
-        }
+      // Nunca copie dados de outra conta para uma conta recém-criada.
+      // Essa cópia era a causa do compartilhamento dos registros entre usuários.
+      if (cloud.ownerId && cloud.ownerId !== user.id) {
+        return res.status(403).json({ ok: false, code: 'DATA_OWNER_MISMATCH', message: 'Os dados deste armazenamento pertencem a outra conta.' });
+      }
+
+      // Marca bancos antigos sem proprietário com o usuário que legitimamente os possui.
+      // Isso mantém os registros da primeira conta sem permitir compartilhamento futuro.
+      if (cloud.db && !cloud.ownerId) {
+        await writePath(path, cloud.db, cloud.revision || 1, user.id);
+        cloud.ownerId = user.id;
       }
 
       return res.status(200).json({ ok: true, ...cloud, user: { id: user.id, name: user.name, email: user.email } });
@@ -81,12 +94,18 @@ export default async function handler(req, res) {
       const baseRevision = Number(req.body?.baseRevision) || 0;
       const db = normalize(req.body?.db);
       if (!req.body?.db || typeof req.body.db !== 'object') return res.status(400).json({ ok: false, message: 'Banco inválido.' });
+
+      if (current.ownerId && current.ownerId !== user.id) {
+        return res.status(403).json({ ok: false, code: 'DATA_OWNER_MISMATCH', message: 'Os dados deste armazenamento pertencem a outra conta.' });
+      }
+
       if (current.revision && baseRevision && baseRevision !== current.revision) {
         return res.status(409).json({ ok: false, code: 'REVISION_CONFLICT', ...current });
       }
+
       const nextRevision = Math.max(current.revision || 0, baseRevision || 0) + 1;
-      const saved = await writePath(path, db, nextRevision);
-      return res.status(200).json({ ok: true, ...saved });
+      const saved = await writePath(path, db, nextRevision, user.id);
+      return res.status(200).json({ ok: true, ...saved, ownerId: user.id });
     }
 
     return res.status(405).json({ ok: false, message: 'Método não permitido.' });
