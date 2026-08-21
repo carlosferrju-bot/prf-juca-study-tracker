@@ -1,5 +1,5 @@
 import { put, list, get } from '@vercel/blob';
-import { requireSession } from './_auth.js';
+import { requireSession, isAdmin, readUsers, writeUsers } from './_auth.js';
 
 const LEGACY_PATH = 'prf-juca/database.json';
 const EMPTY = {
@@ -59,29 +59,54 @@ async function writePath(path, db, revision, ownerId) {
   return { revision, updatedAt: doc.updatedAt, url: result.url };
 }
 
+async function initializeUserDatabase(user, path) {
+  // Every non-admin account gets a completely fresh database exactly once.
+  // This also repairs accounts created before the isolation fix whose database
+  // may have been initialized from the administrator's legacy data.
+  const users = await readUsers();
+  const target = users.find(u => u.id === user.id);
+  if (!target || isAdmin(target) || target.dataInitialized === true) return false;
+
+  await writePath(path, EMPTY, 1, user.id);
+  target.dataPath = path;
+  target.dataInitialized = true;
+  target.dataResetAt = new Date().toISOString();
+  await writeUsers(users);
+  return true;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const user = await requireSession(req, res);
   if (!user) return;
 
-  // Cada usuário possui um caminho de armazenamento próprio.
-  // A primeira conta pode continuar usando o banco legado para preservar seus dados antigos;
-  // todas as demais contas usam o caminho exclusivo criado no cadastro.
-  const path = user.dataPath || `prf-juca/users/${user.id}/database.json`;
+  // The administrator may keep the historical database. Every other account
+  // is forced onto its own immutable namespace based on its user id.
+  const path = isAdmin(user)
+    ? (user.dataPath || LEGACY_PATH)
+    : `prf-juca/users/${user.id}/database.json`;
 
   try {
+    // New/repaired user accounts are initialized with EMPTY before any read.
+    // Therefore no records, disciplines, schedule, questions, etc. can leak
+    // from the administrator or another account.
+    if (!isAdmin(user)) {
+      await initializeUserDatabase(user, path);
+    }
+
     if (req.method === 'GET') {
       const cloud = await readPath(path);
 
-      // Nunca copie dados de outra conta para uma conta recém-criada.
-      // Essa cópia era a causa do compartilhamento dos registros entre usuários.
       if (cloud.ownerId && cloud.ownerId !== user.id) {
         return res.status(403).json({ ok: false, code: 'DATA_OWNER_MISMATCH', message: 'Os dados deste armazenamento pertencem a outra conta.' });
       }
 
-      // Marca bancos antigos sem proprietário com o usuário que legitimamente os possui.
-      // Isso mantém os registros da primeira conta sem permitir compartilhamento futuro.
       if (cloud.db && !cloud.ownerId) {
+        if (!isAdmin(user)) {
+          // Never adopt an unowned/legacy database for a normal user.
+          await writePath(path, EMPTY, 1, user.id);
+          return res.status(200).json({ ok: true, db: normalize(EMPTY), revision: 1, updatedAt: new Date().toISOString(), ownerId: user.id, user: { id: user.id, name: user.name, email: user.email } });
+        }
         await writePath(path, cloud.db, cloud.revision || 1, user.id);
         cloud.ownerId = user.id;
       }
