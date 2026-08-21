@@ -1,4 +1,4 @@
-name: Apply forensic investigation theme
+name: Apply PRF JUCA police neon background
 on:
   push:
     branches: [main, master]
@@ -9,53 +9,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Apply forensic visual layer
+      - name: Apply exact police background
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          style = r'''<style id="prf-juca-police-bg-final">
+/* PRF JUCA — BACKGROUND POLICIAL NEON FINAL */
+html,body{background:#01050c!important}
+body{background-image:linear-gradient(90deg,rgba(1,5,12,.28) 0%,rgba(1,5,12,.10) 45%,rgba(3,3,14,.20) 100%),url("assets/prf-juca-police-bg.webp?v=20260821-final")!important;background-size:cover!important;background-position:center center!important;background-attachment:fixed!important;background-repeat:no-repeat!important}
+body::before{content:""!important;position:fixed!important;inset:0!important;z-index:0!important;pointer-events:none!important;background:linear-gradient(90deg,rgba(1,5,12,.18),rgba(1,5,12,.04) 50%,rgba(4,2,16,.14))!important}
+.app{position:relative!important;z-index:1!important;background:transparent!important}
+.main{background:transparent!important}
+.side{background:rgba(2,8,17,.72)!important;backdrop-filter:blur(9px) saturate(120%);-webkit-backdrop-filter:blur(9px) saturate(120%);border-right:1px solid rgba(0,229,255,.28)!important}
+.top{background:rgba(2,8,17,.18)!important;border-color:rgba(0,229,255,.15)!important;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.card{background:linear-gradient(145deg,rgba(5,16,29,.62),rgba(3,10,21,.48))!important;border-color:rgba(71,161,222,.38)!important;backdrop-filter:blur(8px) saturate(120%);-webkit-backdrop-filter:blur(8px) saturate(120%);box-shadow:0 18px 55px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.035)!important}
+.nav button{background:rgba(4,14,28,.60)!important;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.nav button.active{background:rgba(13,52,83,.76)!important;border-color:rgba(0,229,255,.78)!important}
+</style>'''
+          s = re.sub(r'<style id="prf-juca-police-bg-final">.*?</style>', '', s, flags=re.S)
+          s = re.sub(r'<style id="prf-juca-forensic-v3">.*?</style>', '', s, flags=re.S)
+          s = re.sub(r'<style>\s*/\* PRF JUCA FORENSIC DASHBOARD THEME \*/.*?</style>', '', s, flags=re.S)
+          s = s.replace('</head>', style + '\n</head>', 1)
+          p.write_text(s, encoding='utf-8')
+      - name: Commit
         shell: bash
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          marker='/* PRF JUCA FORENSIC INVESTIGATION V2 */'
-          if marker not in s:
-              css=r'''/* PRF JUCA FORENSIC INVESTIGATION V2 */
-body{background:#02060d url('forensic-bg.svg') center top/cover fixed no-repeat!important;position:relative;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;background:linear-gradient(115deg,rgba(1,6,14,.28),rgba(2,8,18,.10) 45%,rgba(8,3,18,.24)),linear-gradient(180deg,rgba(0,4,10,.08),rgba(0,2,7,.34));pointer-events:none;z-index:-1}
-.app{position:relative;z-index:1}.side{background:rgba(2,8,17,.72)!important;backdrop-filter:blur(16px) saturate(125%);-webkit-backdrop-filter:blur(16px) saturate(125%);border-right:1px solid rgba(0,229,255,.30)!important;box-shadow:12px 0 45px rgba(0,0,0,.34),inset -1px 0 rgba(168,85,247,.14)}
-.main{position:relative}.top{background:rgba(2,8,17,.22);border:1px solid rgba(0,229,255,.14);border-radius:22px;padding:18px 20px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);box-shadow:0 18px 55px rgba(0,0,0,.20)}
-.card{background:linear-gradient(145deg,rgba(5,16,29,.66),rgba(3,10,21,.54))!important;border:1px solid rgba(71,161,222,.34)!important;backdrop-filter:blur(9px) saturate(125%);-webkit-backdrop-filter:blur(9px) saturate(125%);box-shadow:0 18px 55px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.035)!important}
-.metric,.card h2,.top h1{text-shadow:0 2px 18px rgba(0,229,255,.16)}
-.nav button{background:rgba(4,14,28,.62)!important;border-color:rgba(74,164,255,.14)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.nav button:hover,.nav button.active{background:rgba(13,52,83,.72)!important;border-color:rgba(0,229,255,.82)!important;box-shadow:0 0 24px rgba(0,229,255,.20)!important}
-.btn{background:rgba(18,54,86,.68);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
-.field input,.field select,.field textarea{background:rgba(2,10,21,.60)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-.month-calendar,.study-calendar{background:rgba(4,13,25,.56)!important;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
-.month-cell,.calendar-cell{background:rgba(5,16,29,.40)!important}.month-cell.weekend,.calendar-cell.weekend{background:rgba(7,19,32,.44)!important}.calendar-study,.month-study{background:rgba(12,31,48,.66)!important;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
-@media(max-width:650px){body{background-position:center top}.top{border-radius:16px;padding:14px}}
-'''
-              s=s.replace('</style>',css+'</style>',1)
-              p.write_text(s,encoding='utf-8')
-          # V3 is intentionally unconditional with its own selector specificity.
-          v3=r'''<style id="prf-juca-forensic-v3">
-/* PRF JUCA FORENSIC V3 — immersive lab */
-html,body{background:#02060d!important}
-body{background-image:linear-gradient(90deg,rgba(1,6,13,.18) 0%,rgba(1,6,13,.06) 46%,rgba(5,4,18,.12) 100%),url("assets/forensic-lab-bg.svg?v=3")!important;background-size:cover!important;background-position:center top!important;background-attachment:fixed!important;background-repeat:no-repeat!important}
-.app{background:transparent!important}.main{background:transparent!important}
-.side{background:rgba(2,8,16,.72)!important;backdrop-filter:blur(9px) saturate(120%);-webkit-backdrop-filter:blur(9px) saturate(120%)}
-.top{background:rgba(2,8,16,.16)!important;border-color:rgba(0,229,255,.16)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-.card{background:linear-gradient(145deg,rgba(4,13,24,.48),rgba(2,8,16,.34))!important;border-color:rgba(73,151,187,.46)!important;backdrop-filter:blur(4px) saturate(112%);-webkit-backdrop-filter:blur(4px) saturate(112%);box-shadow:0 14px 40px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.035)!important}
-#dashboard>.grid:first-child>.card{background:linear-gradient(145deg,rgba(5,16,28,.58),rgba(2,9,17,.44))!important}
-#dashboard>.grid:nth-child(2)>.card,#dashboardSyllabus{background:linear-gradient(145deg,rgba(4,13,24,.48),rgba(2,8,16,.34))!important}
-.nav button{background:rgba(3,12,22,.64)!important}.nav button.active{background:rgba(13,49,80,.78)!important}
-</style>'''
-          if 'id="prf-juca-forensic-v3"' in s:
-              import re
-              s=re.sub(r'<style id="prf-juca-forensic-v3">.*?</style>','',s,flags=re.S)
-          s=s.replace('</head>',v3+'\n</head>')
-          p.write_text(s,encoding='utf-8')
-          PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "style: expose cinematic forensic lab through glass UI"
+          git diff --cached --quiet || git commit -m "style: apply police neon background"
           git push
