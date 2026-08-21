@@ -53,16 +53,18 @@ export default async function handler(req, res) {
         return res.status(409).json({ ok: false, code: 'EMAIL_EXISTS', message: 'Este e-mail já possui uma conta. Faça login.' });
       }
 
+      const id = crypto.randomUUID();
+      const administrator = isAdmin({ email });
       const user = {
-        id: crypto.randomUUID(),
+        id,
         name,
         email,
         passwordHash: hashPassword(password),
         createdAt: new Date().toISOString(),
         active: true,
-        approved: isAdmin({ email }),
-        dataInitialized: isAdmin({ email }),
-        dataPath: isAdmin({ email }) ? 'prf-juca/database.json' : `prf-juca/users/${crypto.randomUUID()}/database.json`
+        approved: administrator,
+        dataInitialized: administrator,
+        dataPath: administrator ? 'prf-juca/database.json' : `prf-juca/users/${id}/database.json`
       };
 
       users.push(user);
