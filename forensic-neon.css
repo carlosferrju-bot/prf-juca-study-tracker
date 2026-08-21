@@ -3,7 +3,7 @@ html,body{min-height:100%;background:#020711!important}
 body{
   background-image:
     linear-gradient(115deg,rgba(1,5,14,.48),rgba(2,8,20,.18) 45%,rgba(9,3,22,.34)),
-    url("data:image/jpeg;base64,REPLACE_ME") !important;
+    url('/api/bg') !important;
   background-size:cover,cover !important;
   background-position:center center,center center !important;
   background-attachment:fixed,fixed !important;
