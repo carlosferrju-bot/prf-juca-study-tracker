@@ -1,9 +1,9 @@
 import crypto from 'node:crypto';
-import { configured, missingConfig, createSession, setSession, clearSession, currentUser, readUsers, writeUsers, hashPassword, verifyPassword, findUserByEmail, isAdmin } from './_auth.js';
+import { configured, missingConfig, createSession, setSession, clearSession, currentUser, readUsers, writeUsers, hashPassword, verifyPassword, findUserByEmail, isAdmin, isApproved } from './_auth.js';
 
 function publicUser(user) {
   if (!user) return null;
-  return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt, role: isAdmin(user) ? 'admin' : 'user', active: user.active !== false };
+  return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt, role: isAdmin(user) ? 'admin' : 'user', active: user.active !== false, approved: isApproved(user) };
 }
 
 function cleanName(value) {
@@ -60,11 +60,19 @@ export default async function handler(req, res) {
         passwordHash: hashPassword(password),
         createdAt: new Date().toISOString(),
         active: true,
+        approved: isAdmin({ email }),
         dataPath: users.length === 0 ? 'prf-juca/database.json' : `prf-juca/users/${crypto.randomUUID()}/database.json`
       };
 
       users.push(user);
       await writeUsers(users);
+
+      // Only the administrator is approved automatically. New users remain pending
+      // and receive no session until the administrator releases the account.
+      if (!user.approved) {
+        return res.status(201).json({ ok: true, authenticated: false, pending: true, user: publicUser(user), created: true, message: 'Cadastro realizado. Sua conta está pendente de aprovação pelo administrador.' });
+      }
+
       setSession(res, createSession(user.id));
       return res.status(201).json({ ok: true, authenticated: true, user: publicUser(user), created: true });
     }
@@ -75,6 +83,9 @@ export default async function handler(req, res) {
       const user = await findUserByEmail(email);
       if (!user || !verifyPassword(password, user.passwordHash)) {
         return res.status(401).json({ ok: false, code: 'INVALID_CREDENTIALS', message: 'E-mail ou senha incorretos.' });
+      }
+      if (!isAdmin(user) && user.approved === false) {
+        return res.status(403).json({ ok: false, code: 'ACCOUNT_PENDING', message: 'Sua conta foi criada, mas ainda aguarda aprovação do administrador.' });
       }
       if (user.active === false && !isAdmin(user)) {
         return res.status(403).json({ ok: false, code: 'ACCOUNT_SUSPENDED', message: 'Esta conta está temporariamente restringida pelo administrador.' });
