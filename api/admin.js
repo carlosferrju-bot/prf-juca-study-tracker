@@ -1,4 +1,4 @@
-import { configured, missingConfig, currentUser, readUsers, writeUsers, isAdmin, isActive } from './_auth.js';
+import { configured, currentUser, readUsers, writeUsers, isAdmin, isActive, isApproved } from './_auth.js';
 
 function publicUser(user) {
   return {
@@ -7,7 +7,8 @@ function publicUser(user) {
     email: user.email,
     createdAt: user.createdAt,
     role: isAdmin(user) ? 'admin' : 'user',
-    active: isActive(user)
+    active: user.active !== false,
+    approved: isApproved(user)
   };
 }
 
@@ -36,17 +37,22 @@ export default async function handler(req, res) {
     if (req.method === 'PUT') {
       const userId = String(req.body?.userId || '');
       const active = req.body?.active;
-      if (!userId || typeof active !== 'boolean') {
-        return res.status(400).json({ ok: false, message: 'Informe o usuário e o novo estado.' });
+      const approved = req.body?.approved;
+      if (!userId || (typeof active !== 'boolean' && typeof approved !== 'boolean')) {
+        return res.status(400).json({ ok: false, message: 'Informe o usuário e a alteração desejada.' });
       }
 
       const target = users.find(u => u.id === userId);
       if (!target) return res.status(404).json({ ok: false, message: 'Usuário não encontrado.' });
       if (isAdmin(target)) {
-        return res.status(400).json({ ok: false, code: 'ADMIN_PROTECTED', message: 'A conta administradora não pode ser restringida por este painel.' });
+        return res.status(400).json({ ok: false, code: 'ADMIN_PROTECTED', message: 'A conta administradora não pode ser alterada por este painel.' });
       }
 
-      target.active = active;
+      if (typeof approved === 'boolean') target.approved = approved;
+      if (typeof active === 'boolean') target.active = active;
+      // Releasing an account also makes sure it is active.
+      if (approved === true) target.active = true;
+
       await writeUsers(users);
       return res.status(200).json({ ok: true, user: publicUser(target) });
     }
