@@ -6,72 +6,45 @@ function publicUser(user) {
   return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt, role: isAdmin(user) ? 'admin' : 'user', active: user.active !== false, approved: isApproved(user) };
 }
 
-function cleanName(value) {
-  return String(value || '').trim().replace(/\s+/g, ' ').slice(0, 80);
-}
-
-function cleanEmail(value) {
-  return String(value || '').trim().toLowerCase().slice(0, 160);
-}
-
-function validEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
+function cleanName(value) { return String(value || '').trim().replace(/\s+/g, ' ').slice(0, 80); }
+function cleanEmail(value) { return String(value || '').trim().toLowerCase().slice(0, 160); }
+function validEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
-  if (!configured()) {
-    return res.status(503).json({ ok: false, code: 'CLOUD_NOT_CONFIGURED', message: `Configure na Vercel: ${missingConfig().join(', ')}.` });
-  }
+  if (!configured()) return res.status(503).json({ ok: false, code: 'CLOUD_NOT_CONFIGURED', message: `Configure na Vercel: ${missingConfig().join(', ')}.` });
 
   try {
     if (req.method === 'GET') {
       const user = await currentUser(req);
       return res.status(200).json({ ok: true, authenticated: !!user, user: publicUser(user) });
     }
-
     if (req.method !== 'POST') return res.status(405).json({ ok: false, message: 'Método não permitido.' });
 
     const action = String(req.body?.action || 'login');
-
-    if (action === 'logout') {
-      clearSession(res);
-      return res.status(200).json({ ok: true, authenticated: false });
-    }
+    if (action === 'logout') { clearSession(res); return res.status(200).json({ ok: true, authenticated: false }); }
 
     if (action === 'register') {
       const name = cleanName(req.body?.name);
       const email = cleanEmail(req.body?.email);
       const password = String(req.body?.password || '');
-
       if (name.length < 2) return res.status(400).json({ ok: false, message: 'Informe seu nome.' });
       if (!validEmail(email)) return res.status(400).json({ ok: false, message: 'Informe um e-mail válido.' });
       if (password.length < 6) return res.status(400).json({ ok: false, message: 'A senha deve ter pelo menos 6 caracteres.' });
 
       const users = await readUsers();
-      if (users.some(u => String(u.email || '').toLowerCase() === email)) {
-        return res.status(409).json({ ok: false, code: 'EMAIL_EXISTS', message: 'Este e-mail já possui uma conta. Faça login.' });
-      }
+      if (users.some(u => String(u.email || '').toLowerCase() === email)) return res.status(409).json({ ok: false, code: 'EMAIL_EXISTS', message: 'Este e-mail já possui uma conta. Faça login.' });
 
+      const approved = isAdmin({ email });
       const user = {
-        id: crypto.randomUUID(),
-        name,
-        email,
-        passwordHash: hashPassword(password),
-        createdAt: new Date().toISOString(),
-        active: true,
-        approved: isAdmin({ email }),
+        id: crypto.randomUUID(), name, email, passwordHash: hashPassword(password),
+        createdAt: new Date().toISOString(), active: approved, approved,
         dataPath: users.length === 0 ? 'prf-juca/database.json' : `prf-juca/users/${crypto.randomUUID()}/database.json`
       };
-
       users.push(user);
       await writeUsers(users);
 
-      // Only the administrator is approved automatically. New users remain pending
-      // and receive no session until the administrator releases the account.
-      if (!user.approved) {
-        return res.status(201).json({ ok: true, authenticated: false, pending: true, user: publicUser(user), created: true, message: 'Cadastro realizado. Sua conta está pendente de aprovação pelo administrador.' });
-      }
+      if (!approved) return res.status(201).json({ ok: true, authenticated: false, pending: true, user: publicUser(user), created: true, message: 'Cadastro realizado. Sua conta está pendente de aprovação pelo administrador.' });
 
       setSession(res, createSession(user.id));
       return res.status(201).json({ ok: true, authenticated: true, user: publicUser(user), created: true });
@@ -81,15 +54,9 @@ export default async function handler(req, res) {
       const email = cleanEmail(req.body?.email);
       const password = String(req.body?.password || '');
       const user = await findUserByEmail(email);
-      if (!user || !verifyPassword(password, user.passwordHash)) {
-        return res.status(401).json({ ok: false, code: 'INVALID_CREDENTIALS', message: 'E-mail ou senha incorretos.' });
-      }
-      if (!isAdmin(user) && user.approved === false) {
-        return res.status(403).json({ ok: false, code: 'ACCOUNT_PENDING', message: 'Sua conta foi criada, mas ainda aguarda aprovação do administrador.' });
-      }
-      if (user.active === false && !isAdmin(user)) {
-        return res.status(403).json({ ok: false, code: 'ACCOUNT_SUSPENDED', message: 'Esta conta está temporariamente restringida pelo administrador.' });
-      }
+      if (!user || !verifyPassword(password, user.passwordHash)) return res.status(401).json({ ok: false, code: 'INVALID_CREDENTIALS', message: 'E-mail ou senha incorretos.' });
+      if (!isAdmin(user) && user.approved === false) return res.status(403).json({ ok: false, code: 'ACCOUNT_PENDING', message: 'Sua conta foi criada, mas ainda aguarda aprovação do administrador.' });
+      if (user.active === false && !isAdmin(user)) return res.status(403).json({ ok: false, code: 'ACCOUNT_SUSPENDED', message: 'Esta conta está temporariamente restringida pelo administrador.' });
       setSession(res, createSession(user.id));
       return res.status(200).json({ ok: true, authenticated: true, user: publicUser(user) });
     }
