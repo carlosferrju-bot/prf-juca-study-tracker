@@ -1,4 +1,4 @@
-import { configured, currentUser, readUsers, writeUsers, isAdmin, isActive, isApproved } from './_auth.js';
+import { configured, missingConfig, currentUser, readUsers, writeUsers, isAdmin, isActive, isApproved } from './_auth.js';
 
 function publicUser(user) {
   return {
@@ -50,7 +50,6 @@ export default async function handler(req, res) {
 
       if (typeof approved === 'boolean') target.approved = approved;
       if (typeof active === 'boolean') target.active = active;
-      // Releasing an account also makes sure it is active.
       if (approved === true) target.active = true;
 
       await writeUsers(users);
