@@ -24,13 +24,24 @@ export function isAdmin(user) {
   return String(user?.email || '').trim().toLowerCase() === ADMIN_EMAIL;
 }
 
+export function isApproved(user) {
+  // Legacy accounts without the field remain available; every newly created account
+  // explicitly receives approved:false and must be released by the administrator.
+  return user?.approved !== false;
+}
+
 export function isActive(user) {
-  return user?.active !== false;
+  return user?.active !== false && isApproved(user);
 }
 
 export function decorateUser(user) {
   if (!user) return null;
-  return { ...user, role: isAdmin(user) ? 'admin' : 'user', active: isActive(user) };
+  return {
+    ...user,
+    role: isAdmin(user) ? 'admin' : 'user',
+    active: user.active !== false,
+    approved: isApproved(user)
+  };
 }
 
 function sign(payload) {
@@ -93,7 +104,7 @@ export async function readUsers() {
 }
 
 export async function writeUsers(users) {
-  await put(USERS_PATH, JSON.stringify({ version: 2, users }), {
+  await put(USERS_PATH, JSON.stringify({ version: 3, users }), {
     access: 'private',
     addRandomSuffix: false,
     allowOverwrite: true,
