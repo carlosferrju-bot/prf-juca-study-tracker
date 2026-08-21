@@ -1,1 +1,1 @@
-Theme deployment trigger — background policial neon aplicado.
+Theme deployment trigger — background policial neon aplicado e endpoint corrigido.
