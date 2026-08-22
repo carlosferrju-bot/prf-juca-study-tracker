@@ -1,17 +1,14 @@
 import crypto from 'node:crypto';
 import { configured, missingConfig, createSession, setSession, clearSession, currentUser, readUsers, writeUsers, hashPassword, verifyPassword, findUserByEmail, isAdmin, isApproved, readAccess, writeAccess, applyAccess } from './_auth.js';
 
-function publicUser(user) {
-  if (!user) return null;
-  return { id:user.id, name:user.name, email:user.email, createdAt:user.createdAt, role:isAdmin(user)?'admin':'user', active:user.active!==false, approved:isApproved(user) };
-}
+function publicUser(user){if(!user)return null;return{id:user.id,name:user.name,email:user.email,createdAt:user.createdAt,role:isAdmin(user)?'admin':'user',active:user.active!==false,approved:isApproved(user)};}
 function cleanName(value){return String(value||'').trim().replace(/\s+/g,' ').slice(0,80);}
 function cleanEmail(value){return String(value||'').trim().toLowerCase().slice(0,160);}
 function validEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);}
 
 export default async function handler(req,res){
   res.setHeader('Cache-Control','no-store, max-age=0');
-  if(!configured()) return res.status(503).json({ok:false,code:'CLOUD_NOT_CONFIGURED',message:`Configure na Vercel: ${missingConfig().join(', ')}.`});
+  if(!configured())return res.status(503).json({ok:false,code:'CLOUD_NOT_CONFIGURED',message:`Configure na Vercel: ${missingConfig().join(', ')}.`});
   try{
     if(req.method==='GET'){const user=await currentUser(req);return res.status(200).json({ok:true,authenticated:!!user,user:publicUser(user)});}
     if(req.method!=='POST')return res.status(405).json({ok:false,message:'Método não permitido.'});
@@ -27,8 +24,8 @@ export default async function handler(req,res){
       if(users.some(u=>String(u.email||'').toLowerCase()===email))return res.status(409).json({ok:false,code:'EMAIL_EXISTS',message:'Este e-mail já possui uma conta. Faça login.'});
       const id=crypto.randomUUID(),administrator=isAdmin({email});
       const user={id,name,email,passwordHash:hashPassword(password),createdAt:new Date().toISOString(),active:true,approved:administrator,dataInitialized:administrator,dataPath:administrator?'prf-juca/database.json':`prf-juca/users/${id}/database.json`};
-      users.push(user); await writeUsers(users);
-      await writeAccess(id,true,administrator);
+      users.push(user);await writeUsers(users);
+      await writeAccess(id,{active:true,approved:administrator});
       if(!user.approved)return res.status(201).json({ok:true,authenticated:false,pending:true,user:publicUser(user),created:true,message:'Cadastro realizado. Sua conta está pendente de aprovação pelo administrador.'});
       setSession(res,createSession(user.id));return res.status(201).json({ok:true,authenticated:true,user:publicUser(user),created:true});
     }
