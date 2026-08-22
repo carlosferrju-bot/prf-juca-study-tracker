@@ -71,3 +71,5 @@ jobs:
           git add index.html
           git diff --cached --quiet || git commit -m "Adicionar importador de edital com IA"
           git push
+
+# trigger
