@@ -9,7 +9,7 @@
     { "source": "/index.html", "destination": "/", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/app", "destination": "/api/app" }
+    { "source": "/app", "destination": "/api/app-ai" }
   ],
   "headers": [
     {
