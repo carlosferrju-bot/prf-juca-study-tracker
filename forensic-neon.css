@@ -3,4 +3,48 @@ html,body{min-height:100%;background:#020711!important}
 body{background-image:linear-gradient(115deg,rgba(1,5,14,.40),rgba(2,8,20,.10) 45%,rgba(9,3,22,.22)),url('/assets/prf-juca-police-bg.webp?v=20260821-2')!important;background-size:cover,cover!important;background-position:center center,center center!important;background-attachment:fixed,fixed!important;background-repeat:no-repeat,no-repeat!important;color:#eef8ff;position:relative;overflow-x:hidden}
 body::before{content:""!important;position:fixed!important;inset:0!important;z-index:-2!important;pointer-events:none!important;background-image:linear-gradient(90deg,rgba(1,7,15,.48) 0%,rgba(1,8,17,.20) 28%,rgba(1,8,17,.08) 55%,rgba(2,4,13,.12) 100%),url('/assets/prf-juca-police-bg.webp?v=20260821-2')!important;background-size:cover,cover!important;background-position:center center,center center!important;background-repeat:no-repeat,no-repeat!important;opacity:1!important}
 body::after{content:""!important;position:fixed!important;inset:0!important;z-index:-1!important;pointer-events:none!important;background:linear-gradient(180deg,rgba(0,3,10,.01),rgba(0,2,8,.16))!important}
-.app{position:relative;z-index:1;background:transparent!important}.side{background:rgba(2,9,20,.70)!important;backdrop-filter:blur(12px) saturate(135%);-webkit-backdrop-filter:blur(12px) saturate(135%);border-right:1px solid rgba(0,229,255,.28)!important}.main{position:relative;background:transparent!important}.top{background:rgba(2,9,20,.20)!important;border:1px solid rgba(0,229,255,.12)!important;border-radius:20px;padding:18px 20px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}.card{background:linear-gradient(145deg,rgba(7,18,35,.66),rgba(5,12,27,.50))!important;border:1px solid rgba(74,164,255,.30)!important;backdrop-filter:blur(9px) saturate(130%);-webkit-backdrop-filter:blur(9px) saturate(130%);box-shadow:0 18px 55px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.035)!important}.nav button{background:rgba(5,16,32,.58)!important;border-color:rgba(74,164,255,.12)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.nav button:hover,.nav button.active{background:rgba(19,56,95,.70)!important;border-color:rgba(0,229,255,.75)!important;box-shadow:0 0 24px rgba(0,229,255,.18)!important}.btn{background:rgba(23,60,98,.64);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.field input,.field select,.field textarea{background:rgba(3,12,25,.62)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.month-calendar,.study-calendar{background:rgba(5,14,28,.60)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}.month-cell,.calendar-cell{background:rgba(6,18,31,.42)!important}.month-cell.weekend,.calendar-cell.weekend{background:rgba(7,22,37,.46)!important}.calendar-study,.month-study{background:rgba(16,37,58,.66)!important;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}.metric,.card h2,.top h1{text-shadow:0 2px 18px rgba(0,229,255,.12)}.toast{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}@media(max-width:650px){body{background-position:center top,center top!important}body::before{background-position:center top,center top!important}.top{border-radius:16px;padding:14px}}
+.app{position:relative;z-index:1;background:transparent!important}.side{background:rgba(2,9,20,.70)!important;backdrop-filter:blur(12px) saturate(135%);-webkit-backdrop-filter:blur(12px) saturate(135%);border-right:1px solid rgba(0,229,255,.28)!important}.main{position:relative;background:transparent!important}.top{background:rgba(2,9,20,.20)!important;border:1px solid rgba(0,229,255,.12)!important;border-radius:20px;padding:18px 20px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}.card{background:linear-gradient(145deg,rgba(7,18,35,.66),rgba(5,12,27,.50))!important;border:1px solid rgba(74,164,255,.30)!important;backdrop-filter:blur(9px) saturate(130%);-webkit-backdrop-filter:blur(9px) saturate(130%);box-shadow:0 18px 55px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.035)!important}.nav button{background:rgba(5,16,32,.58)!important;border-color:rgba(74,164,255,.12)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.nav button:hover,.nav button.active{background:rgba(19,56,95,.70)!important;border-color:rgba(0,229,255,.75)!important;box-shadow:0 0 24px rgba(0,229,255,.18)!important}.btn{background:rgba(23,60,98,.64);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.field input,.field select,.field textarea{background:rgba(3,12,25,.62)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.month-calendar,.study-calendar{background:rgba(5,14,28,.60)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}.month-cell,.calendar-cell{background:rgba(6,18,31,.42)!important}.month-cell.weekend,.calendar-cell.weekend{background:rgba(7,22,37,.46)!important}.calendar-study,.month-study{background:rgba(16,37,58,.66)!important;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}.metric,.card h2,.top h1{text-shadow:0 2px 18px rgba(0,229,255,.12)}.toast{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+
+/* PRF JUCA — EXPERIÊNCIA MOBILE: mesmas funções e dados, somente apresentação adaptada. */
+@media(max-width:650px){
+html,body{width:100%;min-width:0;overflow-x:hidden}
+body{background-position:center top,center top!important;background-attachment:scroll,scroll!important}
+body::before{background-position:center top,center top!important;background-attachment:scroll,scroll!important}
+.app{display:block!important;min-height:100vh;padding-bottom:76px}
+.side{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:100%!important;height:68px!important;padding:7px 8px!important;border-right:0!important;border-top:1px solid rgba(0,229,255,.30)!important;z-index:100!important;display:flex!important;align-items:center!important;backdrop-filter:blur(18px) saturate(145%)!important;-webkit-backdrop-filter:blur(18px) saturate(145%)!important}
+.brand{display:none!important}
+.nav{display:flex!important;flex:1!important;width:100%!important;gap:5px!important;overflow-x:auto!important;scrollbar-width:none!important}
+.nav::-webkit-scrollbar{display:none!important}
+.nav button{flex:1 0 64px!important;min-width:64px!important;min-height:52px!important;padding:8px 6px!important;border-radius:10px!important;text-align:center!important;font-size:10px!important;line-height:1.15!important;white-space:normal!important;touch-action:manipulation!important}
+.main{margin:0!important;width:100%!important;padding:14px!important;min-width:0!important}
+.top{border-radius:16px!important;padding:14px!important;margin-bottom:14px!important;gap:12px!important}
+.top h1{font-size:23px!important;line-height:1.15!important}
+.top p{font-size:12px!important;line-height:1.4!important}
+.actions{width:100%!important}
+.actions .btn{flex:1 1 auto!important;min-height:42px!important;justify-content:center!important}
+.grid,.g2,.g3,.g4,.fg2{grid-template-columns:1fr!important}
+.card{padding:14px!important;border-radius:15px!important}
+.card h2{font-size:17px!important}
+.metric{font-size:25px!important}
+.section{align-items:flex-start!important;flex-wrap:wrap!important}
+.btn{min-height:42px!important;padding:10px 12px!important}
+.field input,.field select,.field textarea{font-size:16px!important;min-height:44px!important}
+.clock{font-size:46px!important;letter-spacing:1px!important;margin:10px 0!important}
+.timer-buttons{gap:7px!important}
+.timer-buttons .btn{flex:1 1 120px!important}
+.tablewrap{-webkit-overflow-scrolling:touch!important;overflow-x:auto!important}
+.table{min-width:620px!important}
+.monthly-schedule,.weekly-schedule{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:thin!important}
+.month-calendar{min-width:760px!important}
+.study-calendar{min-width:820px!important}
+.month-cell{min-height:120px!important}
+.calendar-cell{height:235px!important}
+.calendar-grid-row{min-height:235px!important}
+.calendar-study{height:155px!important;min-height:155px!important;max-height:155px!important;padding:9px 7px!important}
+.calendar-study-title{font-size:12px!important;height:48px!important;max-height:48px!important}
+.calendar-study-time{font-size:12px!important}
+.view-toggle{width:100%!important}
+.view-toggle .btn{flex:1!important;min-height:40px!important}
+.toast{left:12px!important;right:12px!important;bottom:82px!important;max-width:none!important}
+}
+@media(min-width:651px){.side{transition:width .2s ease}.main{transition:margin-left .2s ease,width .2s ease}}
