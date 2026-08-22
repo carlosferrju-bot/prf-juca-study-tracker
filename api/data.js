@@ -3,6 +3,8 @@ import { requireSession, isAdmin, readUsers, writeUsers } from './_auth.js';
 
 const LEGACY_PATH = 'prf-juca/database.json';
 const DATA_ISOLATION_VERSION = 2;
+const MARILIA_RESET_VERSION = 1;
+const MARILIA_EMAIL = 'claromarilia5@gmail.com';
 const EMPTY = {
   version: 3,
   sessions: [], lessons: [], questions: [], simulados: [], disciplines: [], syllabus: [],
@@ -70,13 +72,17 @@ async function initializeUserDatabase(user, path) {
 
   const needsIsolationMigration = Number(target.dataIsolationVersion || 0) < DATA_ISOLATION_VERSION;
   const needsInitialization = target.dataInitialized !== true;
-  if (!needsIsolationMigration && !needsInitialization) return false;
+  const isMarilia = String(target.email || '').trim().toLowerCase() === MARILIA_EMAIL;
+  const needsMariliaReset = isMarilia && Number(target.mariliaResetVersion || 0) < MARILIA_RESET_VERSION;
+
+  if (!needsIsolationMigration && !needsInitialization && !needsMariliaReset) return false;
 
   await writePath(path, EMPTY, 1, user.id);
   target.dataPath = path;
   target.dataInitialized = true;
   target.dataIsolationVersion = DATA_ISOLATION_VERSION;
   target.dataResetAt = new Date().toISOString();
+  if (needsMariliaReset) target.mariliaResetVersion = MARILIA_RESET_VERSION;
   await writeUsers(users);
   return true;
 }
