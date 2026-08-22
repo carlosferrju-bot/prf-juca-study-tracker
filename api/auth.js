@@ -1,103 +1,47 @@
 import crypto from 'node:crypto';
-import { configured, missingConfig, createSession, setSession, clearSession, currentUser, readUsers, writeUsers, hashPassword, verifyPassword, findUserByEmail, isAdmin, isApproved } from './_auth.js';
+import { configured, missingConfig, createSession, setSession, clearSession, currentUser, readUsers, writeUsers, hashPassword, verifyPassword, findUserByEmail, isAdmin, isApproved, readAccess, writeAccess, applyAccess } from './_auth.js';
 
 function publicUser(user) {
   if (!user) return null;
-  return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt, role: isAdmin(user) ? 'admin' : 'user', active: user.active !== false, approved: isApproved(user) };
+  return { id:user.id, name:user.name, email:user.email, createdAt:user.createdAt, role:isAdmin(user)?'admin':'user', active:user.active!==false, approved:isApproved(user) };
 }
+function cleanName(value){return String(value||'').trim().replace(/\s+/g,' ').slice(0,80);}
+function cleanEmail(value){return String(value||'').trim().toLowerCase().slice(0,160);}
+function validEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);}
 
-function cleanName(value) {
-  return String(value || '').trim().replace(/\s+/g, ' ').slice(0, 80);
-}
+export default async function handler(req,res){
+  res.setHeader('Cache-Control','no-store, max-age=0');
+  if(!configured()) return res.status(503).json({ok:false,code:'CLOUD_NOT_CONFIGURED',message:`Configure na Vercel: ${missingConfig().join(', ')}.`});
+  try{
+    if(req.method==='GET'){const user=await currentUser(req);return res.status(200).json({ok:true,authenticated:!!user,user:publicUser(user)});}
+    if(req.method!=='POST')return res.status(405).json({ok:false,message:'Método não permitido.'});
+    const action=String(req.body?.action||'login');
+    if(action==='logout'){clearSession(res);return res.status(200).json({ok:true,authenticated:false});}
 
-function cleanEmail(value) {
-  return String(value || '').trim().toLowerCase().slice(0, 160);
-}
-
-function validEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store');
-  if (!configured()) {
-    return res.status(503).json({ ok: false, code: 'CLOUD_NOT_CONFIGURED', message: `Configure na Vercel: ${missingConfig().join(', ')}.` });
-  }
-
-  try {
-    if (req.method === 'GET') {
-      const user = await currentUser(req);
-      return res.status(200).json({ ok: true, authenticated: !!user, user: publicUser(user) });
+    if(action==='register'){
+      const name=cleanName(req.body?.name),email=cleanEmail(req.body?.email),password=String(req.body?.password||'');
+      if(name.length<2)return res.status(400).json({ok:false,message:'Informe seu nome.'});
+      if(!validEmail(email))return res.status(400).json({ok:false,message:'Informe um e-mail válido.'});
+      if(password.length<6)return res.status(400).json({ok:false,message:'A senha deve ter pelo menos 6 caracteres.'});
+      const users=await readUsers();
+      if(users.some(u=>String(u.email||'').toLowerCase()===email))return res.status(409).json({ok:false,code:'EMAIL_EXISTS',message:'Este e-mail já possui uma conta. Faça login.'});
+      const id=crypto.randomUUID(),administrator=isAdmin({email});
+      const user={id,name,email,passwordHash:hashPassword(password),createdAt:new Date().toISOString(),active:true,approved:administrator,dataInitialized:administrator,dataPath:administrator?'prf-juca/database.json':`prf-juca/users/${id}/database.json`};
+      users.push(user); await writeUsers(users);
+      await writeAccess(id,true,administrator);
+      if(!user.approved)return res.status(201).json({ok:true,authenticated:false,pending:true,user:publicUser(user),created:true,message:'Cadastro realizado. Sua conta está pendente de aprovação pelo administrador.'});
+      setSession(res,createSession(user.id));return res.status(201).json({ok:true,authenticated:true,user:publicUser(user),created:true});
     }
 
-    if (req.method !== 'POST') return res.status(405).json({ ok: false, message: 'Método não permitido.' });
-
-    const action = String(req.body?.action || 'login');
-
-    if (action === 'logout') {
-      clearSession(res);
-      return res.status(200).json({ ok: true, authenticated: false });
+    if(action==='login'){
+      const email=cleanEmail(req.body?.email),password=String(req.body?.password||'');
+      const base=await findUserByEmail(email);
+      if(!base||!verifyPassword(password,base.passwordHash))return res.status(401).json({ok:false,code:'INVALID_CREDENTIALS',message:'E-mail ou senha incorretos.'});
+      const user=isAdmin(base)?base:applyAccess(base,await readAccess(base.id));
+      if(!isAdmin(user)&&user.approved===false)return res.status(403).json({ok:false,code:'ACCOUNT_PENDING',message:'Sua conta foi criada, mas ainda aguarda aprovação do administrador.'});
+      if(user.active===false&&!isAdmin(user))return res.status(403).json({ok:false,code:'ACCOUNT_SUSPENDED',message:'Esta conta está temporariamente restringida pelo administrador.'});
+      setSession(res,createSession(user.id));return res.status(200).json({ok:true,authenticated:true,user:publicUser(user)});
     }
-
-    if (action === 'register') {
-      const name = cleanName(req.body?.name);
-      const email = cleanEmail(req.body?.email);
-      const password = String(req.body?.password || '');
-
-      if (name.length < 2) return res.status(400).json({ ok: false, message: 'Informe seu nome.' });
-      if (!validEmail(email)) return res.status(400).json({ ok: false, message: 'Informe um e-mail válido.' });
-      if (password.length < 6) return res.status(400).json({ ok: false, message: 'A senha deve ter pelo menos 6 caracteres.' });
-
-      const users = await readUsers();
-      if (users.some(u => String(u.email || '').toLowerCase() === email)) {
-        return res.status(409).json({ ok: false, code: 'EMAIL_EXISTS', message: 'Este e-mail já possui uma conta. Faça login.' });
-      }
-
-      const id = crypto.randomUUID();
-      const administrator = isAdmin({ email });
-      const user = {
-        id,
-        name,
-        email,
-        passwordHash: hashPassword(password),
-        createdAt: new Date().toISOString(),
-        active: true,
-        approved: administrator,
-        dataInitialized: administrator,
-        dataPath: administrator ? 'prf-juca/database.json' : `prf-juca/users/${id}/database.json`
-      };
-
-      users.push(user);
-      await writeUsers(users);
-
-      if (!user.approved) {
-        return res.status(201).json({ ok: true, authenticated: false, pending: true, user: publicUser(user), created: true, message: 'Cadastro realizado. Sua conta está pendente de aprovação pelo administrador.' });
-      }
-
-      setSession(res, createSession(user.id));
-      return res.status(201).json({ ok: true, authenticated: true, user: publicUser(user), created: true });
-    }
-
-    if (action === 'login') {
-      const email = cleanEmail(req.body?.email);
-      const password = String(req.body?.password || '');
-      const user = await findUserByEmail(email);
-      if (!user || !verifyPassword(password, user.passwordHash)) {
-        return res.status(401).json({ ok: false, code: 'INVALID_CREDENTIALS', message: 'E-mail ou senha incorretos.' });
-      }
-      if (!isAdmin(user) && user.approved === false) {
-        return res.status(403).json({ ok: false, code: 'ACCOUNT_PENDING', message: 'Sua conta foi criada, mas ainda aguarda aprovação do administrador.' });
-      }
-      if (user.active === false && !isAdmin(user)) {
-        return res.status(403).json({ ok: false, code: 'ACCOUNT_SUSPENDED', message: 'Esta conta está temporariamente restringida pelo administrador.' });
-      }
-      setSession(res, createSession(user.id));
-      return res.status(200).json({ ok: true, authenticated: true, user: publicUser(user) });
-    }
-
-    return res.status(400).json({ ok: false, message: 'Ação de autenticação inválida.' });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ ok: false, message: 'Não foi possível concluir a autenticação.' });
-  }
+    return res.status(400).json({ok:false,message:'Ação de autenticação inválida.'});
+  }catch(error){console.error('[PRF JUCA AUTH]',error);return res.status(500).json({ok:false,message:'Não foi possível concluir a autenticação.'});}
 }
