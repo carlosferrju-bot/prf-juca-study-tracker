@@ -2,6 +2,7 @@ import { put, list, get } from '@vercel/blob';
 import { requireSession, isAdmin, readUsers, writeUsers } from './_auth.js';
 
 const LEGACY_PATH = 'prf-juca/database.json';
+const DATA_ISOLATION_VERSION = 2;
 const EMPTY = {
   version: 3,
   sessions: [], lessons: [], questions: [], simulados: [], disciplines: [], syllabus: [],
@@ -60,16 +61,21 @@ async function writePath(path, db, revision, ownerId) {
 }
 
 async function initializeUserDatabase(user, path) {
-  // Every non-admin account gets a completely fresh database exactly once.
-  // This also repairs accounts created before the isolation fix whose database
-  // may have been initialized from the administrator's legacy data.
+  // Every non-admin account is migrated to a clean, private database once.
+  // Version 2 deliberately resets existing non-admin databases because they
+  // may contain records inherited from the administrator/legacy database.
   const users = await readUsers();
   const target = users.find(u => u.id === user.id);
-  if (!target || isAdmin(target) || target.dataInitialized === true) return false;
+  if (!target || isAdmin(target)) return false;
+
+  const needsIsolationMigration = Number(target.dataIsolationVersion || 0) < DATA_ISOLATION_VERSION;
+  const needsInitialization = target.dataInitialized !== true;
+  if (!needsIsolationMigration && !needsInitialization) return false;
 
   await writePath(path, EMPTY, 1, user.id);
   target.dataPath = path;
   target.dataInitialized = true;
+  target.dataIsolationVersion = DATA_ISOLATION_VERSION;
   target.dataResetAt = new Date().toISOString();
   await writeUsers(users);
   return true;
@@ -87,9 +93,8 @@ export default async function handler(req, res) {
     : `prf-juca/users/${user.id}/database.json`;
 
   try {
-    // New/repaired user accounts are initialized with EMPTY before any read.
-    // Therefore no records, disciplines, schedule, questions, etc. can leak
-    // from the administrator or another account.
+    // New and previously contaminated user accounts are initialized/migrated
+    // before any GET is allowed to read their database.
     if (!isAdmin(user)) {
       await initializeUserDatabase(user, path);
     }
