@@ -1,0 +1,46 @@
+name: Corrigir nomes do menu
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix-menu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Corrigir nomes do menu
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          replacements = {
+              '>📚 Aulas</button>': '>📚 Registro de Aulas</button>',
+              '>🎯 Questões</button>': '>🎯 Registro de Questões</button>',
+              '>📝 Simulados</button>': '>📝 Registro de Simulados</button>',
+              '>📚 Disciplinas</button>': '>📚 Registro de Disciplinas</button>',
+          }
+          original = s
+          for old, new in replacements.items():
+              s = s.replace(old, new)
+          if s == original:
+              print('Nenhuma alteração necessária.')
+          else:
+              p.write_text(s, encoding='utf-8')
+              print('Nomes do menu corrigidos.')
+          PY
+
+      - name: Commit e push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Corrigir nomes visíveis do menu"
+          git push
