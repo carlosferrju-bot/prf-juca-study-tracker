@@ -1,0 +1,42 @@
+name: Atualizar nomes do menu
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  update-menu:
+    if: ${{ !startsWith(github.event.head_commit.message, 'Atualizar nomes do menu') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Atualizar rótulos do menu
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          replacements = {
+              'data-view="aulas">📚 Aulas</button>': 'data-view="aulas">📚 Registro de Aulas</button>',
+              'data-view="questoes">🎯 Questões</button>': 'data-view="questoes">🎯 Registro de Questões</button>',
+              'data-view="simulados">📝 Simulados</button>': 'data-view="simulados">📝 Registro de Simulados</button>',
+              'data-view="disciplinas">📚 Disciplinas</button>': 'data-view="disciplinas">📚 Registro de Disciplinas</button>',
+          }
+          for old, new in replacements.items():
+              s = s.replace(old, new)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commitar alteração
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Atualizar nomes do menu para registros"
+          git push
