@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       // possuem approved:false, então active:true sozinho não era suficiente.
       if (active===true) target.approved=true;
       await writeUsers(users);
-      return res.status(200).json({ok:true,resetData,message:resetData?`Os dados de ${target.name} foram zerados.`:'Usuário atualizado.',user:publicUser(target)});
+      return res.status(200).json({ok:true,resetData,message:resetData?`Os dados de ${target.name} foram zerados.`:(active===true?'Usuário liberado com sucesso.':'Usuário atualizado.'),user:publicUser(target)});
     }
     return res.status(405).json({ok:false,message:'Método não permitido.'});
   } catch(error) { console.error(error); return res.status(500).json({ok:false,message:'Não foi possível gerenciar os usuários.'}); }
