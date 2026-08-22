@@ -1,4 +1,12 @@
+import { put } from '@vercel/blob';
 import { configured, currentUser, readUsers, writeUsers, isAdmin, isActive, isApproved } from './_auth.js';
+
+const EMPTY = {
+  version: 3,
+  sessions: [], lessons: [], questions: [], simulados: [], disciplines: [], syllabus: [],
+  goals: { hours: 10, questions: 200, examDate: '' },
+  schedule: { hours: 10, perDay: 1, completed: {} }
+};
 
 function publicUser(user) {
   return {
@@ -10,6 +18,31 @@ function publicUser(user) {
     active: isActive(user),
     approved: isApproved(user)
   };
+}
+
+async function resetUserData(target) {
+  const path = `prf-juca/users/${target.id}/database.json`;
+  const doc = {
+    schema: 3,
+    ownerId: target.id,
+    revision: 1,
+    updatedAt: new Date().toISOString(),
+    db: structuredClone(EMPTY)
+  };
+
+  await put(path, JSON.stringify(doc), {
+    access: 'private',
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    contentType: 'application/json',
+    cacheControlMaxAge: 0,
+    token: process.env.BLOB_READ_WRITE_TOKEN
+  });
+
+  target.dataPath = path;
+  target.dataInitialized = true;
+  target.dataIsolationVersion = 2;
+  target.dataResetAt = doc.updatedAt;
 }
 
 export default async function handler(req, res) {
@@ -38,7 +71,9 @@ export default async function handler(req, res) {
       const userId = String(req.body?.userId || '');
       const active = req.body?.active;
       const approved = req.body?.approved;
-      if (!userId || (typeof active !== 'boolean' && typeof approved !== 'boolean')) {
+      const resetData = req.body?.resetData === true;
+
+      if (!userId || (typeof active !== 'boolean' && typeof approved !== 'boolean' && !resetData)) {
         return res.status(400).json({ ok: false, message: 'Informe o usuário e a alteração desejada.' });
       }
 
@@ -48,13 +83,14 @@ export default async function handler(req, res) {
         return res.status(400).json({ ok: false, code: 'ADMIN_PROTECTED', message: 'A conta administradora não pode ser alterada por este painel.' });
       }
 
+      if (resetData) {
+        await resetUserData(target);
+      }
+
       if (typeof approved === 'boolean') {
         target.approved = approved;
         if (approved === true) {
           target.active = true;
-          // Force a clean initialization on the first access after approval.
-          // Existing/corrupted data is never carried into the approved account.
-          target.dataInitialized = false;
           target.dataPath = `prf-juca/users/${target.id}/database.json`;
         }
       }
@@ -62,7 +98,12 @@ export default async function handler(req, res) {
       if (typeof active === 'boolean') target.active = active;
 
       await writeUsers(users);
-      return res.status(200).json({ ok: true, user: publicUser(target) });
+      return res.status(200).json({
+        ok: true,
+        resetData,
+        message: resetData ? `Os dados de ${target.name} foram zerados.` : 'Usuário atualizado.',
+        user: publicUser(target)
+      });
     }
 
     return res.status(405).json({ ok: false, message: 'Método não permitido.' });
