@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROERD — Mata de São João</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020814;color:#fff;font-family:Arial,Helvetica,sans-serif}
+body{display:grid;place-items:center}
+.stage{position:relative;width:100vw;height:56.25vw;max-height:100vh;max-width:177.78vh;overflow:hidden;background:radial-gradient(circle at 50% 48%,#10294a 0%,#061426 42%,#020711 100%)}
+.stage:before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 30% 60%,rgba(40,100,180,.15),transparent 28%),radial-gradient(circle at 70% 35%,rgba(255,190,55,.08),transparent 24%);animation:drift 16s ease-in-out infinite alternate}
+.grid{position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:7% 12%;opacity:.25;transform:perspective(700px) rotateX(55deg) scale(1.5) translateY(22%);transform-origin:center bottom}
+.vignette{position:absolute;inset:0;background:radial-gradient(circle,transparent 35%,rgba(0,0,0,.55) 100%)}
+.particles{position:absolute;inset:0;overflow:hidden}
+.p{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;box-shadow:0 0 10px #fff;opacity:.0;animation:float var(--d) linear infinite;left:var(--x);top:var(--y)}
+.content{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:6vw}
+.scene{position:absolute;inset:0;display:grid;place-items:center;padding:7%;opacity:0;transform:scale(1.035);transition:opacity 1.2s ease,transform 7s ease}
+.scene.active{opacity:1;transform:scale(1)}
+.kicker{font-size:1.25vw;letter-spacing:.42em;color:#bfcce0;margin-bottom:1.6vw;font-weight:700}
+.main{font-size:4.5vw;line-height:1.06;font-weight:800;letter-spacing:.015em;text-shadow:0 0 35px rgba(60,150,255,.18)}
+.main.small{font-size:3.4vw}
+.gold{color:#d8aa43}.red{color:#d74a4a}.white{color:#fff}
+.line{width:12vw;height:3px;margin:2.3vw auto;background:linear-gradient(90deg,transparent,#d8aa43,#fff,#d74a4a,transparent);box-shadow:0 0 18px rgba(216,170,67,.4)}
+.list{display:flex;flex-direction:column;gap:1.1vw;font-size:2.3vw;font-weight:700;letter-spacing:.05em}
+.final-brand{font-size:7vw;font-weight:900;letter-spacing:.12em;background:linear-gradient(90deg,#fff,#d8aa43,#fff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 35px rgba(216,170,67,.2)}
+.tag{font-size:1.9vw;line-height:1.35;letter-spacing:.08em;font-weight:700;margin-top:2vw}
+.progress{position:absolute;left:4%;right:4%;bottom:4%;height:2px;background:rgba(255,255,255,.12);z-index:10}.bar{height:100%;width:0;background:linear-gradient(90deg,#d8aa43,#fff,#d74a4a);box-shadow:0 0 12px #d8aa43}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:20}
+@keyframes drift{to{transform:translate(2%, -2%) scale(1.04)}}@keyframes float{0%{transform:translate3d(0,15vh,0) scale(.3);opacity:0}15%{opacity:.7}80%{opacity:.25}100%{transform:translate3d(var(--dx),-90vh,0) scale(1.1);opacity:0}}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="grid"></div><div class="particles" id="particles"></div><div class="vignette"></div>
+<div class="content">
+<section class="scene active"><div><div class="kicker">MATA DE SÃO JOÃO • BAHIA</div><div class="main">EM MATA DE SÃO JOÃO, O PROERD VAI MUITO ALÉM DA SALA DE AULA.</div><div class="line"></div></div></section>
+<section class="scene"><div><div class="main"><span class="gold">772</span> CRIANÇAS E ADOLESCENTES<br>ALCANÇADOS.</div></div></section>
+<section class="scene"><div><div class="main"><span class="gold">32</span> TURMAS.</div></div></section>
+<section class="scene"><div><div class="main"><span class="gold">11</span> ESCOLAS EM TODO O MUNICÍPIO.</div></div></section>
+<section class="scene"><div><div class="list"><div><span class="gold">LITORAL</span> — 5 ESCOLAS</div><div><span class="white">SEDE</span> — 2 ESCOLAS</div><div><span class="red">ZONA RURAL</span> — 4 ESCOLAS</div></div></div></section>
+<section class="scene"><div><div class="kicker">PROGRAMAÇÃO</div><div class="main small">CURRÍCULOS: 3º E 4º ANOS • 5º ANO • 7º ANO</div></div></section>
+<section class="scene"><div><div class="main small">DIFERENTES TERRITÓRIOS.</div></div></section>
+<section class="scene"><div><div class="main small">DIFERENTES ESCOLAS.</div></div></section>
+<section class="scene"><div><div class="main small">DIFERENTES HISTÓRIAS.</div></div></section>
+<section class="scene"><div><div class="main small">UM ÚNICO PROPÓSITO.</div></div></section>
+<section class="scene"><div><div class="final-brand">PROERD</div><div class="tag">EDUCAR PARA ESCOLHAS SEGURAS.<br>FORTALECER VALORES. PREPARAR PARA A VIDA.</div></div></section>
+<section class="scene"><div><div class="main"><span class="gold">PROERD</span> — RESISTIR É UMA BOA ESCOLHA!</div></div></section>
+</div><div class="flash" id="flash"></div><div class="progress"><div class="bar" id="bar"></div></div>
+</div>
+<script>
+const scenes=[...document.querySelectorAll('.scene')], bar=document.getElementById('bar'), flash=document.getElementById('flash');
+const particles=document.getElementById('particles');
+for(let i=0;i<90;i++){const p=document.createElement('i');p.className='p';p.style.setProperty('--x',Math.random()*100+'%');p.style.setProperty('--y',(55+Math.random()*55)+'%');p.style.setProperty('--d',(5+Math.random()*10)+'s');p.style.setProperty('--dx',(Math.random()*16-8)+'vw');p.style.animationDelay=(-Math.random()*12)+'s';particles.appendChild(p)}
+const duration=4200; let start=performance.now(),idx=0;
+function cut(){scenes.forEach((s,i)=>s.classList.toggle('active',i===idx));flash.style.transition='opacity .08s';flash.style.opacity='.18';setTimeout(()=>{flash.style.transition='opacity .45s';flash.style.opacity='0'},80)}
+function tick(t){const elapsed=t-start;const total=scenes.length*duration;bar.style.width=Math.min(100,elapsed/total*100)+'%';if(elapsed>=duration){idx=Math.min(idx+1,scenes.length-1);start=t;cut()}requestAnimationFrame(tick)}
+document.addEventListener('click',()=>{idx=Math.min(idx+1,scenes.length-1);start=performance.now();cut()});
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
