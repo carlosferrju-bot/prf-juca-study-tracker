@@ -1,0 +1,52 @@
+name: Render PROERD Mata de Sao Joao Video
+
+on:
+  push:
+    paths:
+      - 'proerd-mata-de-sao-joao/**'
+      - '.github/workflows/proerd-video.yml'
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu
+
+      - name: Render cinematic MP4
+        shell: bash
+        run: |
+          mkdir -p proerd-mata-de-sao-joao/dist
+          FONT="/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+          FILTER='
+          color=c=#07111f:s=1920x1080:r=30:d=38,
+          format=yuv420p,
+          drawtext=fontfile=$FONT:text="EM MATA DE SÃO JOÃO, O PROERD VAI MUITO ALÉM DA SALA DE AULA.":fontcolor=white:fontsize=52:x=(w-text_w)/2:y=(h-text_h)/2:alpha=if(lt(t\,3)\,t/1.2\,if(gt(t\,7)\,(10-t)/3\,1)),
+          drawtext=fontfile=$FONT:text="772":fontcolor=#d4af37:fontsize=118:x=(w-text_w)/2:y=390:alpha=if(between(t\,7\,11)\,(t-7)/1\,if(between(t\,11\,12)\,1\,0)),
+          drawtext=fontfile=$FONT:text="CRIANÇAS E ADOLESCENTES ALCANÇADOS.":fontcolor=white:fontsize=50:x=(w-text_w)/2:y=535:alpha=if(between(t\,7\,11)\,(t-7)/1\,if(between(t\,11\,12)\,(12-t)\,0)),
+          drawtext=fontfile=$FONT:text="32 TURMAS.":fontcolor=#ffffff:fontsize=88:x=(w-text_w)/2:y=(h-text_h)/2:alpha=if(between(t\,12\,16)\,1\,0),
+          drawtext=fontfile=$FONT:text="11 ESCOLAS EM TODO O MUNICÍPIO.":fontcolor=#e52b2b:fontsize=68:x=(w-text_w)/2:y=(h-text_h)/2:alpha=if(between(t\,16\,20)\,1\,0),
+          drawtext=fontfile=$FONT:text="LITORAL — 5 ESCOLAS":fontcolor=white:fontsize=58:x=(w-text_w)/2:y=350:alpha=if(between(t\,20\,23)\,1\,0),
+          drawtext=fontfile=$FONT:text="SEDE — 2 ESCOLAS":fontcolor=#d4af37:fontsize=58:x=(w-text_w)/2:y=470:alpha=if(between(t\,20\,23)\,1\,0),
+          drawtext=fontfile=$FONT:text="ZONA RURAL — 4 ESCOLAS":fontcolor=#e52b2b:fontsize=58:x=(w-text_w)/2:y=590:alpha=if(between(t\,20\,23)\,1\,0),
+          drawtext=fontfile=$FONT:text="CURRÍCULOS: 3º E 4º ANOS • 5º ANO • 7º ANO":fontcolor=white:fontsize=48:x=(w-text_w)/2:y=(h-text_h)/2:alpha=if(between(t\,23\,27)\,1\,0),
+          drawtext=fontfile=$FONT:text="DIFERENTES TERRITÓRIOS.":fontcolor=white:fontsize=64:x=(w-text_w)/2:y=310:alpha=if(between(t\,27\,31)\,1\,0),
+          drawtext=fontfile=$FONT:text="DIFERENTES ESCOLAS.":fontcolor=white:fontsize=64:x=(w-text_w)/2:y=430:alpha=if(between(t\,27\,31)\,1\,0),
+          drawtext=fontfile=$FONT:text="DIFERENTES HISTÓRIAS.":fontcolor=white:fontsize=64:x=(w-text_w)/2:y=550:alpha=if(between(t\,27\,31)\,1\,0),
+          drawtext=fontfile=$FONT:text="UM ÚNICO PROPÓSITO.":fontcolor=#d4af37:fontsize=72:x=(w-text_w)/2:y=700:alpha=if(between(t\,27\,31)\,1\,0),
+          drawtext=fontfile=$FONT:text="PROERD":fontcolor=#d4af37:fontsize=150:x=(w-text_w)/2:y=350:alpha=if(between(t\,31\,35)\,1\,0),
+          drawtext=fontfile=$FONT:text="EDUCAR PARA ESCOLHAS SEGURAS. FORTALECER VALORES. PREPARAR PARA A VIDA.":fontcolor=white:fontsize=38:x=(w-text_w)/2:y=555:alpha=if(between(t\,31\,35)\,1\,0),
+          drawtext=fontfile=$FONT:text="PROERD — RESISTIR É UMA BOA ESCOLHA!":fontcolor=#ffffff:fontsize=70:x=(w-text_w)/2:y=(h-text_h)/2:alpha=if(between(t\,35\,38)\,1\,0)
+          '
+          ffmpeg -y -f lavfi -i "color=c=#07111f:s=1920x1080:r=30:d=38"             -f lavfi -i "sine=frequency=55:sample_rate=48000:duration=38"             -vf "$FILTER" -af "volume=0.16,afade=t=in:st=0:d=3,afade=t=out:st=35:d=3"             -c:v libx264 -preset medium -crf 18 -pix_fmt yuv420p             -c:a aac -b:a 192k -shortest             proerd-mata-de-sao-joao/dist/PROERD_MATA_DE_SAO_JOAO.mp4
+
+      - name: Upload MP4
+        uses: actions/upload-artifact@v4
+        with:
+          name: PROERD-MATA-DE-SAO-JOAO-MP4
+          path: proerd-mata-de-sao-joao/dist/PROERD_MATA_DE_SAO_JOAO.mp4
+          retention-days: 30
